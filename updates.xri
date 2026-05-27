@@ -18,7 +18,7 @@
       </p>
    </description>
    <platform os="all" arch="noarch" version="1.9.4:1.9.9999">
-      <package fileName="packages/ego-scripts-20260527.tar.gz" sha1="57517c6cd93525c2e3d4b6f27d3872536474caf0" type="script" releaseDate="20260527">
+      <package fileName="packages/ego-scripts-20260527.tar.gz" sha1="e58fe3c4e35060c4cfb9a78eef20d93371e2d55a" type="script" releaseDate="20260527">
          <title>
             EGo PJSR Scripts - 2026-05-27
          </title>
@@ -42,7 +42,7 @@
             </p>
          </description>
       </package>
-      <package fileName="packages/ego-doc-20260527.tar.gz" sha1="eb6f91fb8364c6d8645740c095a3c73a09567d28" type="doc" releaseDate="20260527">
+      <package fileName="packages/ego-doc-20260527.tar.gz" sha1="2e5d88857e6040b5593f5933332164c31732c7fa" type="doc" releaseDate="20260527">
          <title>
             EGo PJSR Documentation - 2026-05-27
          </title>
