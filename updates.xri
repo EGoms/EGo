@@ -22,7 +22,7 @@
    <platform os="all" arch="noarch" version="1.9.4:1.9.9999">
 
       <package fileName="packages/ego-scripts-20260527.tar.gz"
-               sha1="519be56e65fa750a3885e97949198955bd2f8754"
+               sha1="126831896fc46970fc8fc53add9b2b50515febaa"
                type="script"
                releaseDate="20260527">
          <title>
