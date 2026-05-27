@@ -10,10 +10,21 @@
 # Usage:
 #   tools/build-package.sh                  # date stamp = today (UTC)
 #   tools/build-package.sh 20260131         # override date stamp
+#   SKIP_SIGN_CHECK=1 tools/build-package.sh   # bypass .xsgn freshness check
 #
 # Output:
 #   packages/ego-scripts-<date>.tar.gz      (or .zip if PKG_FMT=zip)
 #   updates.xri rewritten in place
+#
+# Signed-release workflow (do these in order):
+#   1. Edit .js sources under source/src/scripts/EGo/
+#   2. In PixInsight: Script > CodeSign on each modified .js
+#      (regenerates the .xsgn sidecar next to it)
+#   3. Run this script (packs source/src with the fresh .xsgn files,
+#      rewrites updates.xri with the new SHA-1)
+#   4. In PixInsight: Script > CodeSign on updates.xri
+#      (adds an XML signature block in place - must be the LAST step;
+#      any subsequent rebuild rewrites the file and wipes it)
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -38,6 +49,34 @@ if [[ ! -d source/doc/scripts ]]; then
 fi
 
 mkdir -p packages
+
+# Refuse to package stale or missing .xsgn sidecars. Every .js under
+# source/src/scripts/EGo/ must have a sibling .xsgn that is no older
+# than the .js itself - otherwise the script will fail verification
+# in PixInsight on install. Set SKIP_SIGN_CHECK=1 to bypass (e.g. for
+# an unsigned dry-run build).
+if [[ "${SKIP_SIGN_CHECK:-0}" != "1" ]]; then
+   missing=()
+   stale=()
+   while IFS= read -r -d '' js; do
+      xsgn="${js%.js}.xsgn"
+      if [[ ! -f "${xsgn}" ]]; then
+         missing+=("${js}")
+      elif [[ "${js}" -nt "${xsgn}" ]]; then
+         stale+=("${js}")
+      fi
+   done < <(find source/src/scripts/EGo -type f -name '*.js' -print0)
+
+   if (( ${#missing[@]} + ${#stale[@]} > 0 )); then
+      echo "error: refusing to package - signatures need regenerating" >&2
+      for f in "${missing[@]}"; do echo "  missing .xsgn for: ${f}" >&2; done
+      for f in "${stale[@]}";   do echo "  stale  .xsgn for: ${f}" >&2; done
+      echo "" >&2
+      echo "Run PixInsight > Script > CodeSign on the listed .js files," >&2
+      echo "then re-run this script. To bypass: SKIP_SIGN_CHECK=1 ..." >&2
+      exit 3
+   fi
+fi
 
 # Drop any older same-named build before rebuilding (idempotent within a day).
 rm -f "${SRC_PATH}" "${DOC_PATH}"
@@ -117,3 +156,11 @@ python3 tools/update_xri.py \
    --doc-sha1 "${DOC_SHA1}" \
    --date     "${DATE}" \
    --xri      updates.xri
+
+cat >&2 <<'NEXT'
+
+next: sign updates.xri
+   PixInsight > Script > CodeSign, add updates.xri to the file list.
+   This MUST be the last step - any further rebuild rewrites the file
+   and discards the signature. Commit updates.xri after signing.
+NEXT

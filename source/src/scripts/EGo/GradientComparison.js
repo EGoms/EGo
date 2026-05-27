@@ -814,7 +814,11 @@ var GradientComparisonDialog = class extends Dialog
 
       try {
 
-         Dialog.browseScriptDocumentation( "CustomGradientCorrect" );
+         if ( !Dialog.browseScriptDocumentation( "CustomGradientCorrect" ) )
+            Dialog.openBrowser(
+               "file://" + CoreApplication.installationDirectory +
+               "/doc/scripts/CustomGradientCorrect/CustomGradientCorrect.html",
+               "CustomGradientCorrect Documentation" );
 
       } catch ( e ) {
 

@@ -438,7 +438,11 @@ var MaskFactoryDialog = class extends Dialog
 
          try {
 
-            Dialog.browseScriptDocumentation( "MaskFactory" );
+            if ( !Dialog.browseScriptDocumentation( "MaskFactory" ) )
+               Dialog.openBrowser(
+                  "file://" + CoreApplication.installationDirectory +
+                  "/doc/scripts/MaskFactory/MaskFactory.html",
+                  "MaskFactory Documentation" );
 
          } catch ( e ) {
 

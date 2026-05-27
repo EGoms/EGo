@@ -641,7 +641,13 @@ var NarrowbandBlendsPreviewDialog = class extends Dialog
       this.helpBtn.icon = this.scaledResource( ":/process-interface/browse-documentation.png" );
       this.helpBtn.toolTip = "Browse documentation";
       this.helpBtn.onClick = function () {
-         try { Dialog.browseScriptDocumentation( "NarrowbandBlendsPreview" ); }
+         try {
+            if ( !Dialog.browseScriptDocumentation( "NarrowbandBlendsPreview" ) )
+               Dialog.openBrowser(
+                  "file://" + CoreApplication.installationDirectory +
+                  "/doc/scripts/NarrowbandBlendsPreview/NarrowbandBlendsPreview.html",
+                  "NarrowbandBlendsPreview Documentation" );
+         }
          catch ( e ) { console.warningln( "Could not open docs: " + e.message ); }
       };
 

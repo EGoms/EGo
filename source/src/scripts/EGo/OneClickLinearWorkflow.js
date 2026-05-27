@@ -353,7 +353,11 @@ var WorkflowDialog = class extends Dialog
 
          try {
 
-            Dialog.browseScriptDocumentation( "OneClickLinearWorkflow" );
+            if ( !Dialog.browseScriptDocumentation( "OneClickLinearWorkflow" ) )
+               Dialog.openBrowser(
+                  "file://" + CoreApplication.installationDirectory +
+                  "/doc/scripts/OneClickLinearWorkflow/OneClickLinearWorkflow.html",
+                  "OneClickLinearWorkflow Documentation" );
 
          } catch ( e ) {
 

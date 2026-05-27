@@ -276,7 +276,11 @@ var ChannelPreviewDialog = class extends Dialog
 
          try {
 
-            Dialog.browseScriptDocumentation( "ChannelPreview" );
+            if ( !Dialog.browseScriptDocumentation( "ChannelPreview" ) )
+               Dialog.openBrowser(
+                  "file://" + CoreApplication.installationDirectory +
+                  "/doc/scripts/ChannelPreview/ChannelPreview.html",
+                  "ChannelPreview Documentation" );
 
          } catch ( e ) {
 

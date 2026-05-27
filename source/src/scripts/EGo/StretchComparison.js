@@ -407,7 +407,11 @@ var StretchComparisonDialog = class extends Dialog
 
          try {
 
-            Dialog.browseScriptDocumentation( "StretchComparison" );
+            if ( !Dialog.browseScriptDocumentation( "StretchComparison" ) )
+               Dialog.openBrowser(
+                  "file://" + CoreApplication.installationDirectory +
+                  "/doc/scripts/StretchComparison/StretchComparison.html",
+                  "StretchComparison Documentation" );
 
          } catch ( e ) {
 
