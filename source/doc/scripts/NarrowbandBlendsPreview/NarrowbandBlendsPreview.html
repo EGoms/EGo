@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+   <title>NB Blends Live Preview</title>
+   <style type="text/css">
+      body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+             color:#222; background:#fafafa; max-width:880px;
+             margin:1.5em auto; padding:0 1.5em; line-height:1.5; }
+      h1 { border-bottom:2px solid #335; padding-bottom:0.2em; }
+      h2 { margin-top:1.6em; color:#335; }
+      code, pre { font-family:"SF Mono", Menlo, Consolas, monospace;
+                  background:#eee; padding:0.1em 0.35em; border-radius:3px;
+                  font-size:0.92em; }
+      pre { padding:0.7em 1em; overflow-x:auto; }
+      table { border-collapse:collapse; margin:1em 0; }
+      th, td { border:1px solid #bbb; padding:0.4em 0.8em; text-align:left;
+               vertical-align:top; }
+      th { background:#e6e6ef; }
+      img { max-width:100%; display:block; margin:1em auto; }
+   </style>
+</head>
+<body>
+
+<h1>NB Blends Live Preview</h1>
+<p><em>Scripts &gt; EGo &gt; NB Blends Live Preview</em></p>
+
+<h2>Summary</h2>
+<p>Live grid preview of every narrowband blend recipe in the EGo
+catalog: static palettes (Classic Hubble, HOO, Foraxx, HSO, OSH,
+Gold Modified, etc.), dynamic PIP-gated blends (in the spirit of
+Bill Blanshan / Coldest Nights recipes), and spatial split blends
+(left/right, top/bottom, radial, plus combined dynamic+spatial).
+Pick a tile, then open it in PixelMath or apply it to the active
+view.</p>
+
+<img src="images/diagram.svg" alt="Symbol-mapped PixelMath delivery" />
+
+<h2>Workflow</h2>
+<ol>
+   <li>Open your Ha / OIII / SII (and optionally L / R / G / B)
+       channel images in PixInsight.</li>
+   <li>Pick them in the <em>Channel image selectors</em> at the top
+       of the dialog.</li>
+   <li>Click <em>Generate / Refresh Previews</em>. Each blend renders
+       on a downsampled copy of the channels with an auto-STF applied,
+       so you can see roughly what the final stretch will look like.</li>
+   <li>Click a tile to select it. The selected tile gets an orange
+       border.</li>
+   <li><em>Open in PixelMath</em> launches a configured PixelMath
+       dialog at full resolution. Drag the dialog's title bar to the
+       workspace to save the recipe as a process icon.<br/>
+       <em>Apply to Active</em> runs the blend in place on the
+       currently active window (destructive; use Edit &gt; Undo).</li>
+   <li>The dialog stays open across multiple actions; only
+       <em>Exit</em> closes it.</li>
+</ol>
+
+<h2>What "dynamic" means here</h2>
+<p>Dynamic blends use per-pixel gates derived from the channel data
+itself. The most common form is the PIP (Power-In-Power) function
+<code>x^~x</code> — when the input is mid-range the gate peaks, and
+at the extremes it drops to zero. Multiplying a channel by such a gate
+creates a smooth per-pixel mask without designing one manually.</p>
+
+<pre>// Example: Dynamic SHO Universal
+// gO  = O^~O                  OIII PIP
+// gHO = (H*O)^~(H*O)          combined-emission PIP
+// R = gO*S + ~gO*H
+// G = gHO*H + ~gHO*O
+// B = O</pre>
+
+<h2>Spatial blends</h2>
+<p>Spatial blends use <code>X()</code> and <code>Y()</code>
+(normalized pixel coordinates in [0,1]) to weight one palette against
+another across the frame. Useful when an SHO palette works on one half
+of a wide nebula and HOO works better on the other, or when you want a
+radial transition centered on a target.</p>
+
+<h2>Symbol bindings</h2>
+<p>Every blend uses single-letter symbols (H, O, S, plus L, R, G, B for
+the LRGB-flavored recipes). The PixelMath <em>Symbols</em> field is
+constructed automatically from the currently selected channel views,
+so re-targeting a saved icon to a different image set is a one-field
+edit later.</p>
+
+<table>
+   <tr><th>Symbol</th><th>Default binding</th><th>Used by</th></tr>
+   <tr><td>H</td><td>Ha</td><td>almost every blend</td></tr>
+   <tr><td>O</td><td>OIII</td><td>almost every blend</td></tr>
+   <tr><td>S</td><td>SII</td><td>SHO-family blends</td></tr>
+   <tr><td>L, R, G, B</td><td>L, R, G, B</td><td>LRGB-flavored variants</td></tr>
+</table>
+
+<h2>See also</h2>
+<ul>
+   <li><a href="../NarrowbandBlends/NarrowbandBlends.html">Narrowband Blend Icon Factory</a>
+       — bundle many static blends into a single ProcessContainer icon.</li>
+   <li><a href="../ChannelPreview/ChannelPreview.html">Channel Preview</a>
+       for picking the best channels first.</li>
+</ul>
+
+<hr/>
+<p style="font-size:0.85em; color:#666;">
+Part of the EGo PixInsight script set. PCL License 2.0.</p>
+
+</body>
+</html>

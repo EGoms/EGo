@@ -9,8 +9,8 @@ PixInsight menu.
 | `OneClickLinearWorkflow.js` | One-Click Linear Workflow |
 | `MaskFactory.js` | Mask Factory |
 | `ChannelPreview.js` | Channel Preview (all spaces) |
-| `NarrowbandBlends.js` | Narrowband Blend Generator |
-| `DynamicNarrowbandBlends.js` | Dynamic + Spatial NB Blends |
+| `NarrowbandBlends.js` | Narrowband Blend Icon Factory |
+| `NarrowbandBlendsPreview.js` | NB Blends Live Preview |
 | `GradientComparison.js` | Multi Gradient Comparison |
 | `StretchComparison.js` | Stretch Comparison |
 

@@ -396,8 +396,32 @@ var StretchComparisonDialog = class extends Dialog
       this.cancelBtn.text = " Cancel ";
       this.cancelBtn.onClick = function () { this.dialog.cancel(); };
 
+
+      this.helpBtn = new ToolButton( this );
+
+      this.helpBtn.icon = this.scaledResource( ":/process-interface/browse-documentation.png" );
+
+      this.helpBtn.toolTip = "Browse documentation";
+
+      this.helpBtn.onClick = function() {
+
+         try {
+
+            Dialog.browseScriptDocumentation( "StretchComparison" );
+
+         } catch ( e ) {
+
+            console.warningln( "Could not open docs: " + e.message );
+
+         }
+
+      };
+
+
       var btnRow = new HorizontalSizer;
       btnRow.spacing = 8;
+
+      btnRow.add( this.helpBtn );
       btnRow.addStretch();
       btnRow.add( this.runBtn );
       btnRow.add( this.cancelBtn );

@@ -19,16 +19,16 @@
  *   L = L     R = R      G = G     B = B
  */
 #engine v8
-#feature-id NarrowbandBlends : EGo > Narrowband Blend Generator
-#feature-info  Creates PixelMath process instances for common narrowband \
-   (SHO, HOO, HSO, OHS, HOS, Foraxx-style, dynamic SHO) and Ha-into-LRGB \
-   blend recipes. Each blend opens as a PixelMath dialog you can drag to \
-   the workspace to save as a process icon.
+#feature-id NarrowbandBlends : EGo > Narrowband Blend Icon Factory
+#feature-info  Bundles a curated catalog of static narrowband and \
+   Ha-into-LRGB blend recipes (SHO, HOO, HSO, OHS, HOS, Foraxx-style, \
+   etc.) into a single ProcessContainer icon. For interactive previews \
+   of every blend against live data, use NB Blends Live Preview.
 
 CoreApplication.ensureMinimumVersion( 1, 9, 4 );
 
-#define VERSION "1.0.0"
-#define TITLE   "Narrowband Blend Generator"
+#define VERSION "1.1.0"
+#define TITLE   "Narrowband Blend Icon Factory"
 
 // ===========================================================================
 // Blend catalog
@@ -319,9 +319,9 @@ function buildPixelMath( blend, nameMap )
    P.newImageAlpha  = false;
    try {
       P.newImageColorSpace = blend.singleExpression
-                             ? PixelMath.prototype.Gray
-                             : PixelMath.prototype.RGB;
-      P.newImageSampleFormat = PixelMath.prototype.f32;
+                             ? PixelMath.Gray
+                             : PixelMath.RGB;
+      P.newImageSampleFormat = PixelMath.f32;
    } catch ( e ) { /* constants not present on this build */ }
 
    return P;
@@ -439,49 +439,49 @@ var NarrowbandBlendsDialog = class extends Dialog
       this.cancelBtn.text = " Cancel ";
       this.cancelBtn.onClick = function () { this.dialog.cancel(); };
 
+
+      this.helpBtn = new ToolButton( this );
+
+      this.helpBtn.icon = this.scaledResource( ":/process-interface/browse-documentation.png" );
+
+      this.helpBtn.toolTip = "Browse documentation";
+
+      this.helpBtn.onClick = function() {
+
+         try {
+
+            Dialog.browseScriptDocumentation( "NarrowbandBlends" );
+
+         } catch ( e ) {
+
+            console.warningln( "Could not open docs: " + e.message );
+
+         }
+
+      };
+
+
       var btnRow = new HorizontalSizer;
       btnRow.spacing = 8;
+
+      btnRow.add( this.helpBtn );
       btnRow.addStretch();
       btnRow.add( this.runBtn );
       btnRow.add( this.cancelBtn );
 
       // --- Info note ----------------------------------------------------
-      // --- Delivery mode -----------------------------------------------
-      this.deliveryGroup = new GroupBox( this );
-      this.deliveryGroup.title = "Delivery mode";
-      var deliverySizer = new VerticalSizer;
-      deliverySizer.margin  = 6;
-      deliverySizer.spacing = 4;
-
-      this.modeContainer = new RadioButton( this );
-      this.modeContainer.text = "Bundle into one ProcessContainer icon (recommended)";
-      this.modeContainer.checked = true;
-      this.modeContainer.toolTip =
-         "All selected blends are added to a single ProcessContainer. " +
-         "One workspace icon to save; double-click later to see all blends " +
-         "and drag individual ones out as needed.";
-
-      this.modeSequential = new RadioButton( this );
-      this.modeSequential.text = "Open one blend at a time (script exits after; re-run for next)";
-      this.modeSequential.toolTip =
-         "Opens the PixelMath dialog for the FIRST selected blend, then " +
-         "exits. Drag its title bar to iconize, then re-run the script " +
-         "to do the next one. Needed because PixInsight's PixelMath dialog " +
-         "is a singleton -- you can't have multiple open at once.";
-
-      deliverySizer.add( this.modeContainer );
-      deliverySizer.add( this.modeSequential );
-      this.deliveryGroup.sizer = deliverySizer;
-
       this.note = new Label( this );
       this.note.useRichText = true;
       this.note.wordWrapping = true;
       this.note.text =
-         "<i><b>Note:</b> PixInsight allows only one PixelMath dialog at " +
-         "a time, so the script can't drop N separate icons in one shot. " +
-         "Container mode bundles everything into one icon; sequential " +
-         "mode requires re-running the script per blend.</i>";
-      this.note.minHeight = 56;
+         "<i><b>Icon Factory.</b> All selected blends are bundled into a " +
+         "single ProcessContainer. After the container dialog opens, drag " +
+         "its title bar to the workspace to create one icon containing " +
+         "every blend. Double-click the icon later to extract individual " +
+         "blends as separate icons.<br/><br/>" +
+         "For interactive previews of every blend on a live image, use " +
+         "Scripts &gt; EGo &gt; NB Blends Live Preview instead.</i>";
+      this.note.minHeight = 80;
 
       // --- Layout -------------------------------------------------------
       this.sizer = new VerticalSizer;
@@ -490,7 +490,6 @@ var NarrowbandBlendsDialog = class extends Dialog
       this.sizer.add( this.symbolGroup );
       this.sizer.add( this.blendGroup );
       this.sizer.add( pickRow );
-      this.sizer.add( this.deliveryGroup );
       this.sizer.add( this.note );
       this.sizer.addSpacing( 6 );
       this.sizer.add( btnRow );
@@ -521,10 +520,6 @@ var NarrowbandBlendsDialog = class extends Dialog
       return out;
    }
 
-   getDeliveryMode()
-   {
-      return this.modeSequential.checked ? "sequential" : "container";
-   }
 };
 
 // ===========================================================================
@@ -544,50 +539,21 @@ function main()
    {
       (new MessageBox(
          "No blends selected.",
-         TITLE, StdIcon_Information, StdButton_Ok )).execute();
+         TITLE, StdIcon.Information, StdButton.Ok )).execute();
       return;
    }
-
-   var mode = dlg.getDeliveryMode();
 
    console.show();
    log( "============================================================" );
    log( TITLE + " v" + VERSION );
    log( "Symbols: " + JSON.stringify( nameMap ) );
-   log( "Mode:    " + mode );
    log( "Blends:  " + selected.length );
    log( "============================================================" );
 
-   if ( mode == "sequential" )
-      runSequential( selected, nameMap );
-   else
-      runContainer( selected, nameMap );
-}
-
-// One PixelMath at a time. Launches the first selected blend's dialog and
-// exits the script. User iconizes via drag, then re-runs to do the next.
-function runSequential( selected, nameMap )
-{
-   var blend = selected[ 0 ];
-   var P = buildPixelMath( blend, nameMap );
-
-   log( "" );
-   log( "[" + blend.id + "] " + blend.label );
-   logBlend( blend, P );
-   log( "" );
-   log( "Launching PixelMath dialog for THIS blend only." );
-   log( "Drag the dialog's title bar to the workspace to create an icon," );
-   log( "then close PixelMath and re-run this script to do the next one." );
-   if ( selected.length > 1 )
-   {
-      log( "" );
-      log( "Remaining selected blends (you can do them on subsequent runs):" );
-      for ( var i = 1; i < selected.length; ++i )
-         log( "  - " + selected[ i ].label );
-   }
-
-   try { P.launch(); }
-   catch ( e ) { log( "LAUNCH FAILED: " + e.toString() ); }
+   // Icon Factory mode: every selected blend is bundled into a single
+   // ProcessContainer icon. For live previews of every blend, use the
+   // NB Blends Live Preview script.
+   runContainer( selected, nameMap );
 }
 
 // All selected blends added to a single ProcessContainer. The container's
@@ -599,9 +565,7 @@ function runContainer( selected, nameMap )
    try {
       container = new ProcessContainer;
    } catch ( e ) {
-      log( "ProcessContainer is not available on this PI build." );
-      log( "Falling back to sequential mode." );
-      runSequential( selected, nameMap );
+      log( "ProcessContainer is not available on this PI build; aborting." );
       return;
    }
 

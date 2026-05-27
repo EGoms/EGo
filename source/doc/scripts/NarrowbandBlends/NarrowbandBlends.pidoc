@@ -25,8 +25,8 @@
    <e>Symbols</e> field. Re-targeting a saved icon to a different image
    set is a one-field edit later.</p>
 
-   <p>For dynamic and spatial blends, see the companion
-   <e>Dynamic + Spatial NB Blends</e> script.</p>
+   <p>For live previews of every blend (static, dynamic, and spatial),
+   see the companion <e>NB Blends Live Preview</e> script.</p>
 </description>
 
 <usage>
@@ -49,7 +49,7 @@
 </parameter>
 
 <related>
-   <document>DynamicNarrowbandBlends</document>
+   <document>NarrowbandBlendsPreview</document>
    <document>ChannelPreview</document>
 </related>
 

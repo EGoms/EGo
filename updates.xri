@@ -15,7 +15,7 @@
       </p>
       <p>
          Source and issue tracker:
-         https://github.com/&lt;USER&gt;/&lt;REPO&gt;
+         https://github.com/&lt;EGoms&gt;/&lt;EGo&gt;
       </p>
    </description>
 
@@ -36,8 +36,8 @@
                - One-Click Linear Workflow<br/>
                - Mask Factory<br/>
                - Channel Preview (all spaces)<br/>
-               - Narrowband Blend Generator<br/>
-               - Dynamic + Spatial NB Blends<br/>
+               - Narrowband Blend Icon Factory<br/>
+               - NB Blends Live Preview<br/>
                - Multi Gradient Comparison<br/>
                - Stretch Comparison
             </p>

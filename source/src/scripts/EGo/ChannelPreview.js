@@ -6,7 +6,7 @@
  * One-shot generator of every common channel decomposition of the active
  * view. Useful for narrowband palette experimentation (which channel
  * carries the cleanest Ha vs OIII signal? which RGB combine assignment
- * gives the best a*/b*?) and for diagnosing broadband galaxy color casts.
+ * gives the best a-star / b-star?) and for diagnosing broadband galaxy color casts.
  *
  * Generates (selectable):
  *   RGB                : R, G, B channels
@@ -265,8 +265,32 @@ var ChannelPreviewDialog = class extends Dialog
       this.cancelBtn.icon = this.scaledResource( ":/icons/cancel.png" );
       this.cancelBtn.onClick = function() { self.cancel(); };
 
+
+      this.helpBtn = new ToolButton( this );
+
+      this.helpBtn.icon = this.scaledResource( ":/process-interface/browse-documentation.png" );
+
+      this.helpBtn.toolTip = "Browse documentation";
+
+      this.helpBtn.onClick = function() {
+
+         try {
+
+            Dialog.browseScriptDocumentation( "ChannelPreview" );
+
+         } catch ( e ) {
+
+            console.warningln( "Could not open docs: " + e.message );
+
+         }
+
+      };
+
+
       let btnRow = new HorizontalSizer;
       btnRow.spacing = 6;
+
+      btnRow.add( this.helpBtn );
       btnRow.addStretch();
       btnRow.add( this.okBtn );
       btnRow.add( this.cancelBtn );

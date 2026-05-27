@@ -21,3 +21,13 @@ __pycache__/
 
 ## Claude / IDE scratch
 .claude/
+
+## Signing keys - NEVER commit these. The .xssk file contains your
+## encrypted private signing key; if it leaks together with the
+## password, someone can forge signatures under your identity.
+*.xssk
+
+## .xsgn signature sidecars SHOULD be committed - they're the public
+## proof that a specific .js was signed by you. This rule un-ignores
+## them in case a broader pattern above matches.
+!*.xsgn

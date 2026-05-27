@@ -427,8 +427,32 @@ var MaskFactoryDialog = class extends Dialog
       this.cancelBtn.icon = this.scaledResource( ":/icons/cancel.png" );
       this.cancelBtn.onClick = function() { self.cancel(); };
 
+
+      this.helpBtn = new ToolButton( this );
+
+      this.helpBtn.icon = this.scaledResource( ":/process-interface/browse-documentation.png" );
+
+      this.helpBtn.toolTip = "Browse documentation";
+
+      this.helpBtn.onClick = function() {
+
+         try {
+
+            Dialog.browseScriptDocumentation( "MaskFactory" );
+
+         } catch ( e ) {
+
+            console.warningln( "Could not open docs: " + e.message );
+
+         }
+
+      };
+
+
       let btnRow = new HorizontalSizer;
       btnRow.spacing = 6;
+
+      btnRow.add( this.helpBtn );
       btnRow.addStretch();
       btnRow.add( this.okBtn );
       btnRow.add( this.cancelBtn );
