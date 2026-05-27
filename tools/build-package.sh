@@ -21,25 +21,43 @@ cd "$REPO_ROOT"
 
 DATE="${1:-$(date -u +%Y%m%d)}"
 PKG_FMT="${PKG_FMT:-tar.gz}"
-PKG_BASENAME="ego-scripts-${DATE}"
-PKG_NAME="${PKG_BASENAME}.${PKG_FMT}"
-PKG_PATH="packages/${PKG_NAME}"
+SRC_BASENAME="ego-scripts-${DATE}"
+DOC_BASENAME="ego-doc-${DATE}"
+SRC_NAME="${SRC_BASENAME}.${PKG_FMT}"
+DOC_NAME="${DOC_BASENAME}.${PKG_FMT}"
+SRC_PATH="packages/${SRC_NAME}"
+DOC_PATH="packages/${DOC_NAME}"
 
 if [[ ! -d source/src/scripts ]]; then
    echo "error: source/src/scripts not found - run from repo root" >&2
+   exit 1
+fi
+if [[ ! -d source/doc/scripts ]]; then
+   echo "error: source/doc/scripts not found - run from repo root" >&2
    exit 1
 fi
 
 mkdir -p packages
 
 # Drop any older same-named build before rebuilding (idempotent within a day).
-rm -f "${PKG_PATH}"
+rm -f "${SRC_PATH}" "${DOC_PATH}"
 
+# PixInsight installs packages by type. type="script" packages are
+# registered as scripts; type="doc" packages are registered in the
+# documentation catalog so Dialog.browseScriptDocumentation() and
+# Process Explorer can find them. Bundling docs into a type="script"
+# package puts the files on disk but leaves them invisible to PI's
+# doc lookup. So we ship two archives.
 case "${PKG_FMT}" in
    tar.gz)
       # -C source: archive paths are relative to source/, so src/ and
       # doc/ appear at the archive root - exactly what PixInsight wants.
-      # We only ship the rendered per-script HTML (and its images);
+      tar -C source \
+         --exclude='.gitkeep' \
+         --exclude='.DS_Store' \
+         -czf "${SRC_PATH}" src
+
+      # Ship only the rendered per-script HTML (and its images);
       # everything else under doc/ is PIDoc-compiler scaffolding that
       # PI either already has (doc/pidoc/) or doesn't need (the empty
       # docs/ pjsr/ tools/ skeleton dirs, plus the .pidoc sources).
@@ -49,14 +67,17 @@ case "${PKG_FMT}" in
          --exclude='doc/pjsr' \
          --exclude='doc/tools' \
          --exclude='*.pidoc' \
+         --exclude='*.md' \
          --exclude='.gitkeep' \
          --exclude='.DS_Store' \
-         -czf "${PKG_PATH}" src doc
+         -czf "${DOC_PATH}" doc
       ;;
    zip)
-      ( cd source && zip -qr "../${PKG_PATH}" src doc \
+      ( cd source && zip -qr "../${SRC_PATH}" src \
+         -x '*/.gitkeep' '*/.DS_Store' )
+      ( cd source && zip -qr "../${DOC_PATH}" doc \
          -x 'doc/pidoc/*' 'doc/docs/*' 'doc/pjsr/*' 'doc/tools/*' \
-            '*.pidoc' '*/.gitkeep' '*/.DS_Store' )
+            '*.pidoc' '*.md' '*/.gitkeep' '*/.DS_Store' )
       ;;
    *)
       echo "error: unsupported PKG_FMT=${PKG_FMT} (use tar.gz or zip)" >&2
@@ -64,27 +85,35 @@ case "${PKG_FMT}" in
       ;;
 esac
 
-# SHA-1, portable across macOS and Linux.
-if command -v sha1sum >/dev/null 2>&1; then
-   SHA1="$(sha1sum  "${PKG_PATH}" | awk '{print $1}')"
-else
-   SHA1="$(shasum -a 1 "${PKG_PATH}" | awk '{print $1}')"
-fi
+# SHA-1 + size, portable across macOS and Linux.
+hash_file() {
+   if command -v sha1sum >/dev/null 2>&1; then
+      sha1sum  "$1" | awk '{print $1}'
+   else
+      shasum -a 1 "$1" | awk '{print $1}'
+   fi
+}
+size_file() {
+   if stat -c%s . >/dev/null 2>&1; then
+      stat -c%s "$1"
+   else
+      stat -f%z "$1"
+   fi
+}
 
-# Size, portable.
-if stat -c%s . >/dev/null 2>&1; then
-   SIZE="$(stat -c%s "${PKG_PATH}")"
-else
-   SIZE="$(stat -f%z "${PKG_PATH}")"
-fi
+SRC_SHA1="$(hash_file "${SRC_PATH}")"
+DOC_SHA1="$(hash_file "${DOC_PATH}")"
+SRC_SIZE="$(size_file "${SRC_PATH}")"
+DOC_SIZE="$(size_file "${DOC_PATH}")"
 
-echo "built  ${PKG_PATH}"
-echo "size   ${SIZE} bytes"
-echo "sha1   ${SHA1}"
+echo "built  ${SRC_PATH}  (${SRC_SIZE} bytes, sha1 ${SRC_SHA1})"
+echo "built  ${DOC_PATH}  (${DOC_SIZE} bytes, sha1 ${DOC_SHA1})"
 echo "date   ${DATE}"
 
 python3 tools/update_xri.py \
-   --pkg "${PKG_PATH}" \
-   --sha1 "${SHA1}" \
-   --date "${DATE}" \
-   --xri updates.xri
+   --src-pkg  "${SRC_PATH}" \
+   --src-sha1 "${SRC_SHA1}" \
+   --doc-pkg  "${DOC_PATH}" \
+   --doc-sha1 "${DOC_SHA1}" \
+   --date     "${DATE}" \
+   --xri      updates.xri

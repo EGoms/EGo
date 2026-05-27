@@ -56,7 +56,8 @@ sandbox checkbox only when you're ready to pull untested changes.
 ├── README.md                          this file
 ├── updates.xri                        manifest PixInsight reads
 ├── packages/
-│   └── ego-scripts-YYYYMMDD.tar.gz    archive PixInsight downloads
+│   ├── ego-scripts-YYYYMMDD.tar.gz    src/ archive (type="script")
+│   └── ego-doc-YYYYMMDD.tar.gz        doc/ archive (type="doc")
 ├── source/                            inputs to the build
 │   ├── src/scripts/EGo/               .js files (one per script)
 │   └── doc/scripts/<feature-id>/      docs (HTML + PIDoc + images/)
@@ -94,10 +95,14 @@ git push
 
 The build script:
 
-1. Tars `source/src/` and `source/doc/` into
-   `packages/ego-scripts-<YYYYMMDD>.tar.gz`.
-2. Computes the SHA-1.
-3. Rewrites `updates.xri` with the new filename, SHA-1, and release date.
+1. Tars `source/src/` into `packages/ego-scripts-<YYYYMMDD>.tar.gz`
+   (the `type="script"` package PixInsight registers as scripts).
+2. Tars `source/doc/` into `packages/ego-doc-<YYYYMMDD>.tar.gz`
+   (the `type="doc"` package PixInsight registers in its documentation
+   catalog — required for the in-dialog help icon and Process
+   Explorer to find per-script docs).
+3. Computes the SHA-1 of each archive.
+4. Rewrites `updates.xri` with the new filenames, SHA-1s, and release date.
 
 Override the date with a CLI arg, e.g. `tools/build-package.sh 20260601`.
 Override the archive format with `PKG_FMT=zip tools/build-package.sh`.
