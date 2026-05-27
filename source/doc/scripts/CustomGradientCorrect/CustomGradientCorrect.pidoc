@@ -1,67 +1,53 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pidoc SYSTEM "http://pixinsight.com/pidoc/pidoc-1.0.dtd">
-<pidoc>
+\documentclass PIScriptDoc
 
-<title>Multi Gradient Comparison</title>
-<author><name>Evan</name></author>
+\script { CustomGradientCorrect }
 
-<keywords>
-   <keyword>gradient correction</keyword>
-   <keyword>SPFC</keyword>
-   <keyword>MGC</keyword>
-   <keyword>ABE</keyword>
-   <keyword>GradientCorrection</keyword>
-   <keyword>comparison</keyword>
-</keywords>
+\keywords { gradient correction, SPFC, MGC, ABE, GradientCorrection, comparison }
 
-<brief>
-   <p>Runs SpectrophotometricFluxCalibration followed by
+\author { Evan }
+
+\copyright { 2026, Evan. PCL License 2.0. }
+
+\brief {
+   Runs SpectrophotometricFluxCalibration followed by
    GradientCorrection, MultiscaleGradientCorrection, and
    AutomaticBackgroundExtractor on independent clones of the source,
-   producing six output windows so you can pick the best correction.</p>
-</brief>
+   producing six output windows so you can pick the best correction.
+}
 
-<description>
-   <p>For mono images, the filter is auto-detected from the FITS
-   <c>FILTER</c> keyword. For color images, the palette is parsed from
+\description {
+   For mono images, the filter is auto-detected from the FITS
+   \c{FILTER} keyword. For color images, the palette is parsed from
    the image name (SHO, HOO, HSO, OHS, HOS, LRGB, RGB); if none is
-   detected, the dropdown lets you pick one.</p>
+   detected, the dropdown lets you pick one.
 
-   <p>SPFC uses the chosen telescope setup's sensor QE curve and filter
+   SPFC uses the chosen telescope setup's sensor QE curve and filter
    parameters. The telescope setup table, broadband filter brand
-   curves, and narrowband bandwidth values are defined near the top of
-   the script source for easy customization.</p>
-</description>
+   curves, and narrowband bandwidth values are defined near the top
+   of the script source for easy customization.
+}
 
-<usage>
-   <p>Open from <e>Scripts &gt; EGo &gt; Multi Gradient Comparison</e>.
-   Select the source view and telescope setup, override the palette
-   only if auto-detection failed, and click <e>Run</e>.</p>
-</usage>
+\usage {
+   Open from \e{Scripts > EGo > Multi Gradient Comparison}. Select
+   the source view and telescope setup, override the palette only
+   if auto-detection failed, and click \e{Run}.
 
-<parameter>
-   <name>Source view</name>
-   <description>Any mono or color view. The original is cloned; the
-   source itself is never modified.</description>
-</parameter>
+   \definition {
+      { Source view }
+      { Any mono or color view. The original is cloned; the source
+        itself is never modified. }
 
-<parameter>
-   <name>Telescope setup</name>
-   <description>Identifies the sensor QE curve and the broadband filter
-   brand or narrowband bandpass set used during acquisition.</description>
-</parameter>
+      { Telescope setup }
+      { Identifies the sensor QE curve and the broadband filter brand
+        or narrowband bandpass set used during acquisition. }
 
-<parameter>
-   <name>Palette override (color only)</name>
-   <description>SHO, HOO, HSO, OHS, HOS, LRGB, or RGB. Auto-detected
-   from the image name when possible.</description>
-</parameter>
+      { Palette override (color only) }
+      { SHO, HOO, HSO, OHS, HOS, LRGB, or RGB. Auto-detected from the
+        image name when possible. }
+   }
+}
 
-<related>
-   <document>StretchComparison</document>
-   <document>OneClickLinearWorkflow</document>
-</related>
+\relatedscript StretchComparison
+\relatedscript OneClickLinearWorkflow
 
-<copyright><p>Copyright &copy; 2026 Evan. PCL License 2.0.</p></copyright>
-
-</pidoc>
+\make

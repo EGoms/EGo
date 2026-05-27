@@ -39,10 +39,24 @@ case "${PKG_FMT}" in
    tar.gz)
       # -C source: archive paths are relative to source/, so src/ and
       # doc/ appear at the archive root - exactly what PixInsight wants.
-      tar -C source -czf "${PKG_PATH}" src doc
+      # We only ship the rendered per-script HTML (and its images);
+      # everything else under doc/ is PIDoc-compiler scaffolding that
+      # PI either already has (doc/pidoc/) or doesn't need (the empty
+      # docs/ pjsr/ tools/ skeleton dirs, plus the .pidoc sources).
+      tar -C source \
+         --exclude='doc/pidoc' \
+         --exclude='doc/docs' \
+         --exclude='doc/pjsr' \
+         --exclude='doc/tools' \
+         --exclude='*.pidoc' \
+         --exclude='.gitkeep' \
+         --exclude='.DS_Store' \
+         -czf "${PKG_PATH}" src doc
       ;;
    zip)
-      ( cd source && zip -qr "../${PKG_PATH}" src doc )
+      ( cd source && zip -qr "../${PKG_PATH}" src doc \
+         -x 'doc/pidoc/*' 'doc/docs/*' 'doc/pjsr/*' 'doc/tools/*' \
+            '*.pidoc' '*/.gitkeep' '*/.DS_Store' )
       ;;
    *)
       echo "error: unsupported PKG_FMT=${PKG_FMT} (use tar.gz or zip)" >&2

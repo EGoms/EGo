@@ -1,78 +1,105 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-   <title>Stretch Comparison</title>
-   <style type="text/css">
-      body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-             color:#222; background:#fafafa; max-width:880px;
-             margin:1.5em auto; padding:0 1.5em; line-height:1.5; }
-      h1 { border-bottom:2px solid #335; padding-bottom:0.2em; }
-      h2 { margin-top:1.6em; color:#335; }
-      code { font-family:"SF Mono", Menlo, Consolas, monospace;
-             background:#eee; padding:0.1em 0.35em; border-radius:3px;
-             font-size:0.92em; }
-      table { border-collapse:collapse; margin:1em 0; }
-      th, td { border:1px solid #bbb; padding:0.4em 0.8em; text-align:left;
-               vertical-align:top; }
-      th { background:#e6e6ef; }
-      img { max-width:100%; display:block; margin:1em auto; }
-   </style>
+   <title>PixInsight Reference Documentation | StretchComparison</title>
+   <meta name="keywords" content="stretch, STF, MaskedStretch, ArcsinhStretch, GHS, AdaptiveStretch" />
+   <meta name="author" content="Evan" />
+   <meta name="description" content="Clones the target image once per enabled stretch method and applies each to a separate clone for side-by-side comparison." />
+   <meta name="robots" content="INDEX,FOLLOW" />
+   <meta name="generator" content="PixInsight Documentation Compiler script version 1.7.3" />
+   <meta name="pidoc-document-class" content="PIScriptDoc" />
+   <script type="text/javascript" src="../../pidoc/scripts/pidoc-utility.js"></script>
+   <link type="text/css" href="../../pidoc/css/pidoc-common.css" rel="stylesheet" />
+   <link type="text/css" href="../../pidoc/css/pidoc-highlight.css" rel="stylesheet" />
+   <link type="text/css" href="../../pidoc/css/pidoc-tool.css" rel="stylesheet" />
+   <link rel="icon" href="../../pidoc/icons/pidoc-icon.svg" />
 </head>
 <body>
+<script type="text/javascript">
+   pidoc_generateDynamicContents();
+</script>
 
-<h1>Stretch Comparison</h1>
-<p><em>Scripts &gt; EGo &gt; Stretch Comparison</em></p>
+<h1>StretchComparison</h1>
 
-<h2>Summary</h2>
-<p>Applies every enabled non-linear stretch method to an independent
-clone of the target and leaves N output windows open for side-by-side
-comparison. The original is never modified.</p>
+<div id="authors">
+<p>By Evan</p>
+</div>
 
-<img src="images/diagram.svg" alt="Stretch comparison flow" />
+<hr class="separator"/>
 
-<h2>Methods</h2>
-<table>
-   <tr><th>Method</th><th>Suffix</th><th>Notes</th></tr>
-   <tr><td>Auto-STF baked into HistogramTransformation</td><td><code>_STF</code></td>
-       <td>The "always-on" baseline. Shadows clipping −2.80&sigma;,
-       target background 0.25, per-channel (un-linked).</td></tr>
-   <tr><td>MaskedStretch</td><td><code>_MS</code></td>
-       <td>Iterative stretch with built-in highlight protection.
-       Target background 0.125, 100 iterations.</td></tr>
-   <tr><td>ArcsinhStretch</td><td><code>_AS</code></td>
-       <td>Preserves star color. Stretch factor 100.</td></tr>
-   <tr><td>GeneralizedHyperbolicStretch</td><td><code>_GHS</code></td>
-       <td>The fine-control workhorse. Defaults aimed at a moderate
-       initial stretch.</td></tr>
-   <tr><td>AdaptiveStretch</td><td><code>_AdS</code></td>
-       <td>Distribution-aware automatic stretch.</td></tr>
-</table>
+<div id="brief">
+<p>Clones the target image once per enabled stretch method and applies each to a separate clone for side-by-side comparison. <a href="#__contents__">[more]</a></p></div>
 
-<h2>What you get</h2>
-<p>For each enabled method, the script clones the target and applies
-the stretch to the clone. Output windows are named
-<code>&lt;source&gt;&lt;suffix&gt;</code> (e.g.
-<code>M51_stack_STF</code>). They remain open in PixInsight and are
-not saved to disk.</p>
+<div id="keywords">
+<p><strong>Keywords:</strong> stretch, STF, MaskedStretch, ArcsinhStretch, GHS, AdaptiveStretch</p>
+</div>
 
-<h2>Customizing</h2>
-<p>Per-method tuning constants live near the top of the script
-(<code>STF_SHADOWS_CLIPPING</code>, <code>STF_TARGET_BACKGROUND</code>,
-<code>MS_TARGET_BG</code>, <code>AS_STRETCH</code>, &hellip;). Edit
-them to make a particular method's defaults match your house style.</p>
-
-<h2>See also</h2>
+<h3 class="pidoc_sectionTitle" id="__toc__">Contents</h3>
+<p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'toc', this );">[hide]</p>
+<div id="toc">
 <ul>
-   <li><a href="../CustomGradientCorrect/CustomGradientCorrect.html">Multi Gradient Comparison</a></li>
-   <li><a href="../OneClickLinearWorkflow/OneClickLinearWorkflow.html">One-Click Linear Workflow</a> — for the linear stages that come before stretching.</li>
+<li class="pidoc_tocItem"><a href="#__Description__">1&emsp;Description</a></li>
+<li class="pidoc_tocItem"><a href="#__Usage__">2&emsp;Usage</a></li>
+<li class="pidoc_tocItem"><a href="#__related_scripts__">Related Scripts</a></li>
 </ul>
+</div>
 
-<hr/>
-<p style="font-size:0.85em; color:#666;">
-Part of the EGo PixInsight script set. PCL License 2.0.</p>
+<div id="__contents__">
+
+<div class="pidoc_section" id="__Description__">
+   <h3 class="pidoc_sectionTitle">1&emsp;Description</h3>
+   <p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'Description', this );">[hide]</p>
+   <div id="Description">
+<p>Methods covered: Auto-STF baked into HistogramTransformation, MaskedStretch, ArcsinhStretch, GeneralizedHyperbolicStretch, and AdaptiveStretch. The original is never modified; output windows are suffixed with the method tag (<span class="pidoc_code">_STF</span>, <span class="pidoc_code">_MS</span>, <span class="pidoc_code">_AS</span>, <span class="pidoc_code">_GHS</span>, <span class="pidoc_code">_AdS</span>) and remain open in PixInsight.</p>
+<p>Per-method tuning constants live at the top of the script source - edit them to match your preferred defaults.</p>
+   </div>
+</div>
+
+<div class="pidoc_section" id="__Usage__">
+   <h3 class="pidoc_sectionTitle">2&emsp;Usage</h3>
+   <p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'Usage', this );">[hide]</p>
+   <div id="Usage">
+<p>Open from <em>Scripts &gt; EGo &gt; Stretch Comparison</em>. Choose the source view, enable the methods you want to compare, and click <em>Run</em>.</p>
+
+<dl class="pidoc_list">
+<dt>
+<p>Source view</p>
+</dt>
+<dd>
+<p>Any mono or color view. Must be linear.</p>
+</dd>
+<dt>
+<p>Method toggles</p>
+</dt>
+<dd>
+<p>Independent on/off for STF, MaskedStretch, ArcsinhStretch, GHS, and AdaptiveStretch.</p>
+</dd>
+</dl>
+
+   </div>
+</div>
+
+<div class="pidoc_section" id="__related_scripts__">
+   <h3 class="pidoc_sectionTitle">Related Scripts</h3>
+   <div id="related_scripts">
+<p><a href="../../scripts/CustomGradientCorrect/CustomGradientCorrect.html" title="../../scripts/CustomGradientCorrect/CustomGradientCorrect.html">CustomGradientCorrect</a>, <a href="../../scripts/OneClickLinearWorkflow/OneClickLinearWorkflow.html" title="../../scripts/OneClickLinearWorkflow/OneClickLinearWorkflow.html">OneClickLinearWorkflow</a></p>
+   </div>
+</div>
+
+<hr class="separator"/>
+
+<div id="copyright">
+   <p>Copyright &copy; 2026, Evan. PCL License 2.0.</p>
+</div>
+
+<div id="footer">
+   <p>Generated by the PixInsight Documentation Compiler script version 1.7.3 on 2026-05-27 18:40:20 UTC</p>
+</div>
+<br/>
+<br/>
+
+</div> <!-- contents -->
 
 </body>
 </html>

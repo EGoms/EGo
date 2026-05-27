@@ -1,90 +1,70 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pidoc SYSTEM "http://pixinsight.com/pidoc/pidoc-1.0.dtd">
-<pidoc>
+\documentclass PIScriptDoc
 
-<title>NB Blends Live Preview</title>
-<author><name>Evan</name></author>
+\script { NarrowbandBlendsPreview }
 
-<keywords>
-   <keyword>narrowband</keyword>
-   <keyword>PixelMath</keyword>
-   <keyword>SHO</keyword>
-   <keyword>HOO</keyword>
-   <keyword>Foraxx</keyword>
-   <keyword>PIP</keyword>
-   <keyword>dynamic blend</keyword>
-   <keyword>spatial blend</keyword>
-   <keyword>preview</keyword>
-</keywords>
+\keywords { narrowband, PixelMath, SHO, HOO, Foraxx, PIP, dynamic blend, spatial blend, preview }
 
-<brief>
-   <p>Live grid preview of every narrowband blend recipe in the EGo
-   catalog: static palettes (Classic Hubble, HOO, Foraxx, ...), dynamic
-   PIP-gated blends, and spatial split blends. Pick a tile, then open
-   it in PixelMath or apply it to the active view.</p>
-</brief>
+\author { Evan }
 
-<description>
-   <p>Each blend is rendered on auto-STF'd downsampled copies of the
+\copyright { 2026, Evan. PCL License 2.0. }
+
+\brief {
+   Live grid preview of every narrowband blend recipe in the EGo
+   catalog: static palettes (Classic Hubble, HOO, Foraxx, ...),
+   dynamic PIP-gated blends, and spatial split blends. Pick a tile,
+   then open it in PixelMath or apply it to the active view.
+}
+
+\description {
+   Each blend is rendered on auto-STF'd downsampled copies of the
    selected channel views, so you can compare every palette
-   side-by-side at a glance. Click a tile to select; the actions below
-   operate on the selected recipe at full resolution.</p>
+   side-by-side at a glance. Click a tile to select; the actions
+   below operate on the selected recipe at full resolution.
 
-   <p>Recipes use single-letter symbols (<c>H</c>, <c>O</c>, <c>S</c>,
-   plus <c>L</c>, <c>R</c>, <c>G</c>, <c>B</c> for LRGB-flavored ones)
-   bound to actual view IDs via PixelMath's <e>Symbols</e> field.
-   Re-targeting a saved icon to a different image set is a one-field
-   edit later.</p>
+   Recipes use single-letter symbols (\c{H}, \c{O}, \c{S}, plus
+   \c{L}, \c{R}, \c{G}, \c{B} for LRGB-flavored ones) bound to actual
+   view IDs via PixelMath's \e{Symbols} field. Re-targeting a saved
+   icon to a different image set is a one-field edit later.
 
-   <p>Dynamic blends use per-pixel gates derived from the channels
-   themselves (e.g. <c>gO = O^~O</c>) for smooth maskless transitions
-   between palettes. Spatial blends use <c>X()</c> / <c>Y()</c> to
-   weight one palette against another across the frame.</p>
-</description>
+   Dynamic blends use per-pixel gates derived from the channels
+   themselves (e.g. \c{gO = O^~O}) for smooth maskless transitions
+   between palettes. Spatial blends use \c{X()} / \c{Y()} to weight
+   one palette against another across the frame.
+}
 
-<usage>
-   <p>Open from <e>Scripts &gt; EGo &gt; NB Blends Live Preview</e>.
-   Pick at least Ha and OIII views (and SII / L / R / G / B as needed
-   by individual recipes), click <e>Generate / Refresh Previews</e>,
-   then click a tile and either <e>Open in PixelMath</e> or
-   <e>Apply to Active</e>.</p>
-</usage>
+\usage {
+   Open from \e{Scripts > EGo > NB Blends Live Preview}. Pick at
+   least Ha and OIII views (and SII / L / R / G / B as needed by
+   individual recipes), click \e{Generate / Refresh Previews}, then
+   click a tile and either \e{Open in PixelMath} or \e{Apply to
+   Active}.
 
-<parameter>
-   <name>Channel image selectors</name>
-   <description>ViewLists for H (Ha), O (OIII), S (SII), L, R, G, B.
-   Ha and OIII are required; the others are used only by recipes that
-   reference them.</description>
-</parameter>
+   \definition {
+      { Channel image selectors }
+      { ViewLists for H (Ha), O (OIII), S (SII), L, R, G, B. Ha and
+        OIII are required; the others are used only by recipes that
+        reference them. }
 
-<parameter>
-   <name>Generate / Refresh Previews</name>
-   <description>Downsamples the selected channels (longest side
-   capped at 220 px), runs every blend against the downsampled clones,
-   applies a per-channel Auto-STF, and renders each result into its
-   tile. Tiles that need channels you haven't selected show
-   <e>Needs: X,Y</e>.</description>
-</parameter>
+      { Generate / Refresh Previews }
+      { Downsamples the selected channels (longest side capped at
+        220 px), runs every blend against the downsampled clones,
+        applies a per-channel Auto-STF, and renders each result into
+        its tile. Tiles that need channels you haven't selected show
+        \e{Needs: X,Y}. }
 
-<parameter>
-   <name>Open in PixelMath</name>
-   <description>Launches a configured PixelMath dialog at full
-   resolution with the recipe's expressions and symbol bindings
-   already filled in. Drag the PixelMath title bar to the workspace
-   to save the recipe as a process icon.</description>
-</parameter>
+      { Open in PixelMath }
+      { Launches a configured PixelMath dialog at full resolution
+        with the recipe's expressions and symbol bindings already
+        filled in. Drag the PixelMath title bar to the workspace to
+        save the recipe as a process icon. }
 
-<parameter>
-   <name>Apply to Active</name>
-   <description>Runs the selected blend in place on the currently
-   active view. Destructive; use <e>Edit &gt; Undo</e> to revert.</description>
-</parameter>
+      { Apply to Active }
+      { Runs the selected blend in place on the currently active
+        view. Destructive; use \e{Edit > Undo} to revert. }
+   }
+}
 
-<related>
-   <document>NarrowbandBlends</document>
-   <document>ChannelPreview</document>
-</related>
+\relatedscript NarrowbandBlends
+\relatedscript ChannelPreview
 
-<copyright><p>Copyright &copy; 2026 Evan. PCL License 2.0.</p></copyright>
-
-</pidoc>
+\make

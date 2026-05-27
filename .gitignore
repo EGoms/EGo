@@ -22,6 +22,13 @@ __pycache__/
 ## Claude / IDE scratch
 .claude/
 
+## PIDoc shared bundle - locally bootstrapped CSS/JS/icons that the
+## per-script HTML references via ../../pidoc/... PixInsight already
+## ships an identical bundle at /Applications/PixInsight/doc/pidoc/,
+## so we neither commit nor ship it. The compiler regenerates it on
+## demand if missing.
+/source/doc/pidoc/
+
 ## Signing keys - NEVER commit these. The .xssk file contains your
 ## encrypted private signing key; if it leaks together with the
 ## password, someone can forge signatures under your identity.

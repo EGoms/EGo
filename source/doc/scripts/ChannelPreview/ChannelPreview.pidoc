@@ -1,67 +1,53 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pidoc SYSTEM "http://pixinsight.com/pidoc/pidoc-1.0.dtd">
-<pidoc>
+\documentclass PIScriptDoc
 
-<title>Channel Preview</title>
-<author><name>Evan</name></author>
+\script { ChannelPreview }
 
-<keywords>
-   <keyword>channel extraction</keyword>
-   <keyword>Lab</keyword>
-   <keyword>HSV</keyword>
-   <keyword>narrowband palette</keyword>
-   <keyword>contact sheet</keyword>
-</keywords>
+\keywords { channel extraction, Lab, HSV, narrowband palette, contact sheet }
 
-<brief>
-   <p>Decomposes a color image into every common color space (RGB,
-   L*a*b*, L*c*h*, HSV, HSI, XYZ) in one pass, optionally with inverted
-   variants and a tiled contact sheet.</p>
-</brief>
+\author { Evan }
 
-<description>
-   <p>For each selected color space, the script extracts the three
+\copyright { 2026, Evan. PCL License 2.0. }
+
+\brief {
+   Decomposes a color image into every common color space (RGB, L*a*b*,
+   L*c*h*, HSV, HSI, XYZ) in one pass, optionally with inverted variants
+   and a tiled contact sheet.
+}
+
+\description {
+   For each selected color space, the script extracts the three
    component channels into independent image windows named
-   <c>&lt;sourceId&gt;_&lt;space&gt;_&lt;channel&gt;</c>. An optional
-   contact sheet renders all produced channels into a single 8-bit RGB
-   image for at-a-glance comparison.</p>
+   \c{<sourceId>_<space>_<channel>}. An optional contact sheet renders
+   all produced channels into a single 8-bit RGB image for
+   at-a-glance comparison.
 
-   <p>Useful for picking the cleanest luminance proxy when blending
+   Useful for picking the cleanest luminance proxy when blending
    narrowband palettes, or for diagnosing color casts in broadband
-   galaxy work.</p>
-</description>
+   galaxy work.
+}
 
-<usage>
-   <p>Open from <e>Scripts &gt; EGo &gt; Channel Preview (all spaces)</e>.
-   Pick the source view (must be a color image), choose color spaces,
-   tweak contact-sheet options, and click <e>Generate</e>.</p>
-</usage>
+\usage {
+   Open from \e{Scripts > EGo > Channel Preview (all spaces)}. Pick
+   the source view (must be a color image), choose color spaces,
+   tweak contact-sheet options, and click \e{Generate}.
 
-<parameter>
-   <name>Color spaces</name>
-   <description>Toggle which color spaces to extract. Defaults: RGB,
-   Lab, HSI.</description>
-</parameter>
+   \definition {
+      { Color spaces }
+      { Toggle which color spaces to extract. Defaults: RGB, Lab,
+        HSI. }
 
-<parameter>
-   <name>Also generate inverted channels</name>
-   <description>Duplicate each extracted channel and apply
-   <c>PixelMath ~$T</c> to it. Inverted windows are named with an
-   <c>_inv</c> suffix.</description>
-</parameter>
+      { Also generate inverted channels }
+      { Duplicate each extracted channel and apply \c{PixelMath ~$T}
+        to it. Inverted windows are named with an \c{_inv} suffix. }
 
-<parameter>
-   <name>Contact sheet</name>
-   <description>Builds an 8-bit RGB tile-grid image containing
-   downsampled previews of every produced channel. Tile size (long
-   edge in pixels) and column count are configurable.</description>
-</parameter>
+      { Contact sheet }
+      { Builds an 8-bit RGB tile-grid image containing downsampled
+        previews of every produced channel. Tile size (long edge in
+        pixels) and column count are configurable. }
+   }
+}
 
-<related>
-   <document>NarrowbandBlends</document>
-   <document>NarrowbandBlendsPreview</document>
-</related>
+\relatedscript NarrowbandBlends
+\relatedscript NarrowbandBlendsPreview
 
-<copyright><p>Copyright &copy; 2026 Evan. PCL License 2.0.</p></copyright>
-
-</pidoc>
+\make

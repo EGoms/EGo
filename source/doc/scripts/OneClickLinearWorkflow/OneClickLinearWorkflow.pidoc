@@ -1,120 +1,87 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pidoc SYSTEM "http://pixinsight.com/pidoc/pidoc-1.0.dtd">
+\documentclass PIScriptDoc
 
-<pidoc>
+\script { OneClickLinearWorkflow }
 
-<title>One-Click Linear Workflow</title>
+\keywords { linear processing, narrowband, broadband galaxies, workflow, BlurXTerminator, NoiseXTerminator, StarXTerminator, SPCC }
 
-<author>
-   <name>Evan</name>
-   <email></email>
-</author>
+\author { Evan }
 
-<keywords>
-   <keyword>linear processing</keyword>
-   <keyword>narrowband</keyword>
-   <keyword>broadband galaxies</keyword>
-   <keyword>workflow</keyword>
-   <keyword>BlurXTerminator</keyword>
-   <keyword>NoiseXTerminator</keyword>
-   <keyword>StarXTerminator</keyword>
-   <keyword>SPCC</keyword>
-</keywords>
+\copyright { 2026, Evan. PCL License 2.0. }
 
-<brief>
-   <p>Runs a sane linear-stage processing chain with separate presets for
-   narrowband nebulae and broadband galaxies.</p>
-</brief>
+\brief {
+   Runs a sane linear-stage processing chain with separate presets
+   for narrowband nebulae and broadband galaxies.
+}
 
-<description>
-   <p>This script executes a chain of linear-stage processes on the active
-   view, with two presets tuned for the targets the author shoots most:
-   <s>narrowband nebulae</s> and <s>broadband galaxies</s>.</p>
+\description {
+   This script executes a chain of linear-stage processes on the
+   active view, with two presets tuned for the targets the author
+   shoots most: \s{narrowband nebulae} and \s{broadband galaxies}.
 
-   <p>The chain consists of gradient correction, optional plate solve and
-   SPCC for broadband, BlurXTerminator, NoiseXTerminator, and an optional
-   star/starless split with StarXTerminator. Each step is reversible
-   through PixInsight's Undo system and the chain halts on the first
-   failure or cancellation.</p>
+   The chain consists of gradient correction, optional plate solve
+   and SPCC for broadband, BlurXTerminator, NoiseXTerminator, and an
+   optional star/starless split with StarXTerminator. Each step is
+   reversible through PixInsight's Undo system and the chain halts
+   on the first failure or cancellation.
 
-   <p>Missing third-party processes (BXT, NXT, SXT, GradientCorrection)
+   Missing third-party processes (BXT, NXT, SXT, GradientCorrection)
    are detected at runtime and skipped with a console warning rather
-   than aborting the chain.</p>
-</description>
+   than aborting the chain.
+}
 
-<usage>
-   <p>Open the script from <e>Scripts &gt; EGo &gt; One-Click Linear
-   Workflow</e>. Pick the target type, toggle the steps you want, and
-   click <e>Run</e>.</p>
+\usage {
+   Open the script from \e{Scripts > EGo > One-Click Linear
+   Workflow}. Pick the target type, toggle the steps you want, and
+   click \e{Run}.
 
-   <p>The active image window is the target. The image must be linear;
-   running this on a stretched image will produce poor results.</p>
-</usage>
+   The active image window is the target. The image must be linear;
+   running this on a stretched image will produce poor results.
 
-<section title="Workflow steps">
-   <subsection title="Narrowband preset">
-      <p>GradientCorrection &rarr; BlurXTerminator (sharpen_nonstellar 0.85,
-      sharpen_stars 0.20) &rarr; NoiseXTerminator (denoise 0.85) &rarr;
-      optional StarXTerminator split.</p>
-   </subsection>
+   \definition {
+      { Target type }
+      { Switches between the narrowband and broadband galaxy presets.
+        Disables plate solve and SPCC checkboxes in narrowband mode. }
 
-   <subsection title="Broadband galaxy preset">
-      <p>GradientCorrection &rarr; ImageSolver dialog &rarr; SPCC dialog
-      &rarr; BlurXTerminator (sharpen_nonstellar 0.75, sharpen_stars 0.25)
-      &rarr; NoiseXTerminator (denoise 0.85) &rarr; optional StarXTerminator
-      split.</p>
-   </subsection>
-</section>
+      { Gradient correction }
+      { Runs GradientCorrection; falls back to
+        AutomaticBackgroundExtractor if GC is not installed. }
 
-<parameter>
-   <name>Target type</name>
-   <description>Switches between the narrowband and broadband galaxy
-   presets. Disables plate solve and SPCC checkboxes in narrowband mode.</description>
-</parameter>
+      { Plate solve }
+      { Launches the bundled ImageSolver script. Broadband only. }
 
-<parameter>
-   <name>Gradient correction</name>
-   <description>Runs GradientCorrection; falls back to
-   AutomaticBackgroundExtractor if GC is not installed.</description>
-</parameter>
+      { SPCC }
+      { Opens SpectrophotometricColorCalibration in interactive mode.
+        Broadband only. }
 
-<parameter>
-   <name>Plate solve</name>
-   <description>Launches the bundled ImageSolver script. Broadband only.</description>
-</parameter>
+      { BlurXTerminator }
+      { Runs BXT with preset values for the chosen target type. }
 
-<parameter>
-   <name>SPCC</name>
-   <description>Opens SpectrophotometricColorCalibration in interactive
-   mode. Broadband only.</description>
-</parameter>
+      { NoiseXTerminator }
+      { Runs NXT with detail 0.15 and denoise 0.85. }
 
-<parameter>
-   <name>BlurXTerminator</name>
-   <description>Runs BXT with preset values for the chosen target type.</description>
-</parameter>
+      { Star split }
+      { Runs StarXTerminator with \c{stars=true} and
+        \c{unscreen=true}, producing both the stars-only and starless
+        siblings of the input. }
+   }
+}
 
-<parameter>
-   <name>NoiseXTerminator</name>
-   <description>Runs NXT with detail 0.15 and denoise 0.85.</description>
-</parameter>
+\section { Workflow steps } {
+   \subsection { Narrowband preset } {
+      GradientCorrection -> BlurXTerminator (sharpen_nonstellar 0.85,
+      sharpen_stars 0.20) -> NoiseXTerminator (denoise 0.85) ->
+      optional StarXTerminator split.
+   }
 
-<parameter>
-   <name>Star split</name>
-   <description>Runs StarXTerminator with <c>stars=true</c> and
-   <c>unscreen=true</c>, producing both the stars-only and starless
-   siblings of the input.</description>
-</parameter>
+   \subsection { Broadband galaxy preset } {
+      GradientCorrection -> ImageSolver dialog -> SPCC dialog ->
+      BlurXTerminator (sharpen_nonstellar 0.75, sharpen_stars 0.25)
+      -> NoiseXTerminator (denoise 0.85) -> optional StarXTerminator
+      split.
+   }
+}
 
-<related>
-   <document>MaskFactory</document>
-   <document>ChannelPreview</document>
-</related>
+\relatedscript MaskFactory
+\relatedscript ChannelPreview
 
-<copyright>
-   <p>Copyright &copy; 2026 Evan. Released under the
-   <a href="https://pixinsight.com/license/PCL-License-2.0.html">PCL
-   License 2.0</a>.</p>
-</copyright>
-
-</pidoc>
+\make

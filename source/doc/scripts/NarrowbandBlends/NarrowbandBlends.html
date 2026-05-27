@@ -1,82 +1,105 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-   <title>Narrowband Blend Generator</title>
-   <style type="text/css">
-      body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-             color:#222; background:#fafafa; max-width:880px;
-             margin:1.5em auto; padding:0 1.5em; line-height:1.5; }
-      h1 { border-bottom:2px solid #335; padding-bottom:0.2em; }
-      h2 { margin-top:1.6em; color:#335; }
-      code { font-family:"SF Mono", Menlo, Consolas, monospace;
-             background:#eee; padding:0.1em 0.35em; border-radius:3px;
-             font-size:0.92em; }
-      table { border-collapse:collapse; margin:1em 0; }
-      th, td { border:1px solid #bbb; padding:0.4em 0.8em; text-align:left;
-               vertical-align:top; }
-      th { background:#e6e6ef; }
-      img { max-width:100%; display:block; margin:1em auto; }
-   </style>
+   <title>PixInsight Reference Documentation | NarrowbandBlends</title>
+   <meta name="keywords" content="narrowband, SHO, HOO, HSO, palette, Ha-into-LRGB" />
+   <meta name="author" content="Evan" />
+   <meta name="description" content="PixelMath recipe generator for a curated catalog of static narrowband palettes plus Ha-into-LRGB recipes." />
+   <meta name="robots" content="INDEX,FOLLOW" />
+   <meta name="generator" content="PixInsight Documentation Compiler script version 1.7.3" />
+   <meta name="pidoc-document-class" content="PIScriptDoc" />
+   <script type="text/javascript" src="../../pidoc/scripts/pidoc-utility.js"></script>
+   <link type="text/css" href="../../pidoc/css/pidoc-common.css" rel="stylesheet" />
+   <link type="text/css" href="../../pidoc/css/pidoc-highlight.css" rel="stylesheet" />
+   <link type="text/css" href="../../pidoc/css/pidoc-tool.css" rel="stylesheet" />
+   <link rel="icon" href="../../pidoc/icons/pidoc-icon.svg" />
 </head>
 <body>
+<script type="text/javascript">
+   pidoc_generateDynamicContents();
+</script>
 
-<h1>Narrowband Blend Generator</h1>
-<p><em>Scripts &gt; EGo &gt; Narrowband Blend Generator</em></p>
+<h1>NarrowbandBlends</h1>
 
-<h2>Summary</h2>
-<p>Generates PixelMath process instances for a curated catalog of
-<strong>static</strong> narrowband blends — Classic Hubble (SHO), HOO,
-HSO, OHS, HOS, Foraxx-style, and a few Ha-into-LRGB recipes — using
-single-letter symbols in the formulas and the PixelMath
-<em>Symbols</em> field to bind those to real view IDs.</p>
+<div id="authors">
+<p>By Evan</p>
+</div>
 
-<img src="images/diagram.svg" alt="Narrowband blend catalog" />
+<hr class="separator"/>
 
-<h2>Catalog (selected)</h2>
-<table>
-   <tr><th>ID</th><th>R</th><th>G</th><th>B</th><th>Note</th></tr>
-   <tr><td>Classic_Hubble</td><td>S</td><td>H</td><td>O</td>
-       <td>The original SHO Hubble palette. Gold nebulae.</td></tr>
-   <tr><td>HOO</td><td>H</td><td>O</td><td>O</td>
-       <td>Bicolor Ha + OIII; cleanest output when SII is noisy.</td></tr>
-   <tr><td>HSO</td><td>H</td><td>S</td><td>O</td>
-       <td>R + G swap of SHO; reddish nebulae.</td></tr>
-   <tr><td>Foraxx-style</td><td colspan="3">PIP-weighted Ha/OIII mix</td>
-       <td>Smooth NB look without per-pixel masking.</td></tr>
-   <tr><td>Ha-into-L</td><td colspan="3">L = max(L, H)</td>
-       <td>Inject Ha detail into broadband L for LRGB targets.</td></tr>
-</table>
-<p>See the script source for the complete list (12 canonical palettes
-plus several Ha-into-LRGB recipes).</p>
+<div id="brief">
+<p>PixelMath recipe generator for a curated catalog of static narrowband palettes plus Ha-into-LRGB recipes. <a href="#__contents__">[more]</a></p></div>
 
-<h2>How it works</h2>
-<p>Formulas reference single-letter symbols (H, S, O, L, R, G, B). The
-PixelMath <em>Symbols</em> field is constructed from the bindings you
-set at the top of the dialog. Each blend is opened as its own
-PixelMath dialog — drag the title bar to the workspace to save it as
-an icon. (PixInsight has no scripting API to drop a workspace icon
-directly; launch-and-iconize is the supported path here.)</p>
+<div id="keywords">
+<p><strong>Keywords:</strong> narrowband, SHO, HOO, HSO, palette, Ha-into-LRGB</p>
+</div>
 
-<h2>Compared to NB Blends Live Preview</h2>
-<p>This script is the <em>icon factory</em>: every selected blend is
-bundled into a single ProcessContainer icon. For a live grid preview
-of every blend (static, dynamic, and spatial) rendered on your actual
-channels before you save anything, see the companion
-<a href="../NarrowbandBlendsPreview/NarrowbandBlendsPreview.html">NB Blends
-Live Preview</a> script.</p>
-
-<h2>See also</h2>
+<h3 class="pidoc_sectionTitle" id="__toc__">Contents</h3>
+<p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'toc', this );">[hide]</p>
+<div id="toc">
 <ul>
-   <li><a href="../NarrowbandBlendsPreview/NarrowbandBlendsPreview.html">NB Blends Live Preview</a></li>
-   <li><a href="../ChannelPreview/ChannelPreview.html">Channel Preview</a></li>
+<li class="pidoc_tocItem"><a href="#__Description__">1&emsp;Description</a></li>
+<li class="pidoc_tocItem"><a href="#__Usage__">2&emsp;Usage</a></li>
+<li class="pidoc_tocItem"><a href="#__related_scripts__">Related Scripts</a></li>
 </ul>
+</div>
 
-<hr/>
-<p style="font-size:0.85em; color:#666;">
-Part of the EGo PixInsight script set. PCL License 2.0.</p>
+<div id="__contents__">
+
+<div class="pidoc_section" id="__Description__">
+   <h3 class="pidoc_sectionTitle">1&emsp;Description</h3>
+   <p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'Description', this );">[hide]</p>
+   <div id="Description">
+<p>Each recipe uses single-letter symbols (H, S, O, L, R, G, B) in the formula and binds them to real view IDs through PixelMath's <em>Symbols</em> field. Re-targeting a saved icon to a different image set is a one-field edit later.</p>
+<p>For live previews of every blend (static, dynamic, and spatial), see the companion <em>NB Blends Live Preview</em> script.</p>
+   </div>
+</div>
+
+<div class="pidoc_section" id="__Usage__">
+   <h3 class="pidoc_sectionTitle">2&emsp;Usage</h3>
+   <p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'Usage', this );">[hide]</p>
+   <div id="Usage">
+<p>Open from <em>Scripts &gt; EGo &gt; Narrowband Blend Generator</em>. Set the symbol bindings, select the blends to generate, and click <em>Run</em>. Each blend opens as its own PixelMath dialog - drag the title bar to the workspace to save the instance as an icon.</p>
+
+<dl class="pidoc_list">
+<dt>
+<p>Symbol bindings</p>
+</dt>
+<dd>
+<p>The view IDs to substitute for H, O, S, L, R, G, B. Defaults: H = Ha, O = OIII, S = SII.</p>
+</dd>
+<dt>
+<p>Blends to generate</p>
+</dt>
+<dd>
+<p>Multi-select list of static palettes (Classic Hubble, HOO, HSO, OHS, HOS, Foraxx-style) and Ha-into-LRGB recipes.</p>
+</dd>
+</dl>
+
+   </div>
+</div>
+
+<div class="pidoc_section" id="__related_scripts__">
+   <h3 class="pidoc_sectionTitle">Related Scripts</h3>
+   <div id="related_scripts">
+<p><a href="../../scripts/NarrowbandBlendsPreview/NarrowbandBlendsPreview.html" title="../../scripts/NarrowbandBlendsPreview/NarrowbandBlendsPreview.html">NarrowbandBlendsPreview</a>, <a href="../../scripts/ChannelPreview/ChannelPreview.html" title="../../scripts/ChannelPreview/ChannelPreview.html">ChannelPreview</a></p>
+   </div>
+</div>
+
+<hr class="separator"/>
+
+<div id="copyright">
+   <p>Copyright &copy; 2026, Evan. PCL License 2.0.</p>
+</div>
+
+<div id="footer">
+   <p>Generated by the PixInsight Documentation Compiler script version 1.7.3 on 2026-05-27 18:40:20 UTC</p>
+</div>
+<br/>
+<br/>
+
+</div> <!-- contents -->
 
 </body>
 </html>

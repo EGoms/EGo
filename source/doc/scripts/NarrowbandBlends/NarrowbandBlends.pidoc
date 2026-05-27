@@ -1,58 +1,46 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pidoc SYSTEM "http://pixinsight.com/pidoc/pidoc-1.0.dtd">
-<pidoc>
+\documentclass PIScriptDoc
 
-<title>Narrowband Blend Generator</title>
-<author><name>Evan</name></author>
+\script { NarrowbandBlends }
 
-<keywords>
-   <keyword>narrowband</keyword>
-   <keyword>SHO</keyword>
-   <keyword>HOO</keyword>
-   <keyword>HSO</keyword>
-   <keyword>palette</keyword>
-   <keyword>Ha-into-LRGB</keyword>
-</keywords>
+\keywords { narrowband, SHO, HOO, HSO, palette, Ha-into-LRGB }
 
-<brief>
-   <p>PixelMath recipe generator for a curated catalog of static
-   narrowband palettes plus Ha-into-LRGB recipes.</p>
-</brief>
+\author { Evan }
 
-<description>
-   <p>Each recipe uses single-letter symbols (H, S, O, L, R, G, B) in
-   the formula and binds them to real view IDs through PixelMath's
-   <e>Symbols</e> field. Re-targeting a saved icon to a different image
-   set is a one-field edit later.</p>
+\copyright { 2026, Evan. PCL License 2.0. }
 
-   <p>For live previews of every blend (static, dynamic, and spatial),
-   see the companion <e>NB Blends Live Preview</e> script.</p>
-</description>
+\brief {
+   PixelMath recipe generator for a curated catalog of static
+   narrowband palettes plus Ha-into-LRGB recipes.
+}
 
-<usage>
-   <p>Open from <e>Scripts &gt; EGo &gt; Narrowband Blend Generator</e>.
-   Set the symbol bindings, select the blends to generate, and click
-   <e>Run</e>. Each blend opens as its own PixelMath dialog — drag the
-   title bar to the workspace to save the instance as an icon.</p>
-</usage>
+\description {
+   Each recipe uses single-letter symbols (H, S, O, L, R, G, B) in the
+   formula and binds them to real view IDs through PixelMath's
+   \e{Symbols} field. Re-targeting a saved icon to a different image
+   set is a one-field edit later.
 
-<parameter>
-   <name>Symbol bindings</name>
-   <description>The view IDs to substitute for H, O, S, L, R, G, B.
-   Defaults: H = Ha, O = OIII, S = SII.</description>
-</parameter>
+   For live previews of every blend (static, dynamic, and spatial),
+   see the companion \e{NB Blends Live Preview} script.
+}
 
-<parameter>
-   <name>Blends to generate</name>
-   <description>Multi-select list of static palettes (Classic Hubble,
-   HOO, HSO, OHS, HOS, Foraxx-style) and Ha-into-LRGB recipes.</description>
-</parameter>
+\usage {
+   Open from \e{Scripts > EGo > Narrowband Blend Generator}. Set the
+   symbol bindings, select the blends to generate, and click \e{Run}.
+   Each blend opens as its own PixelMath dialog \- drag the title bar
+   to the workspace to save the instance as an icon.
 
-<related>
-   <document>NarrowbandBlendsPreview</document>
-   <document>ChannelPreview</document>
-</related>
+   \definition {
+      { Symbol bindings }
+      { The view IDs to substitute for H, O, S, L, R, G, B. Defaults:
+        H = Ha, O = OIII, S = SII. }
 
-<copyright><p>Copyright &copy; 2026 Evan. PCL License 2.0.</p></copyright>
+      { Blends to generate }
+      { Multi-select list of static palettes (Classic Hubble, HOO,
+        HSO, OHS, HOS, Foraxx-style) and Ha-into-LRGB recipes. }
+   }
+}
 
-</pidoc>
+\relatedscript NarrowbandBlendsPreview
+\relatedscript ChannelPreview
+
+\make

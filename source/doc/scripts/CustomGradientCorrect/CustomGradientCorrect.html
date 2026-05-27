@@ -1,94 +1,111 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-   <title>Multi Gradient Comparison</title>
-   <style type="text/css">
-      body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-             color:#222; background:#fafafa; max-width:880px;
-             margin:1.5em auto; padding:0 1.5em; line-height:1.5; }
-      h1 { border-bottom:2px solid #335; padding-bottom:0.2em; }
-      h2 { margin-top:1.6em; color:#335; }
-      code { font-family:"SF Mono", Menlo, Consolas, monospace;
-             background:#eee; padding:0.1em 0.35em; border-radius:3px;
-             font-size:0.92em; }
-      table { border-collapse:collapse; margin:1em 0; }
-      th, td { border:1px solid #bbb; padding:0.4em 0.8em; text-align:left;
-               vertical-align:top; }
-      th { background:#e6e6ef; }
-      .note { background:#fffde7; border-left:4px solid #ffb300;
-              padding:0.6em 1em; margin:1em 0; }
-      img { max-width:100%; display:block; margin:1em auto; }
-   </style>
+   <title>PixInsight Reference Documentation | CustomGradientCorrect</title>
+   <meta name="keywords" content="gradient correction, SPFC, MGC, ABE, GradientCorrection, comparison" />
+   <meta name="author" content="Evan" />
+   <meta name="description" content="Runs SpectrophotometricFluxCalibration followed by GradientCorrection, MultiscaleGradientCorrection, and AutomaticBackgroundExtractor on independent clones of the source, producing six output windows so you can pick the best correction." />
+   <meta name="robots" content="INDEX,FOLLOW" />
+   <meta name="generator" content="PixInsight Documentation Compiler script version 1.7.3" />
+   <meta name="pidoc-document-class" content="PIScriptDoc" />
+   <script type="text/javascript" src="../../pidoc/scripts/pidoc-utility.js"></script>
+   <link type="text/css" href="../../pidoc/css/pidoc-common.css" rel="stylesheet" />
+   <link type="text/css" href="../../pidoc/css/pidoc-highlight.css" rel="stylesheet" />
+   <link type="text/css" href="../../pidoc/css/pidoc-tool.css" rel="stylesheet" />
+   <link rel="icon" href="../../pidoc/icons/pidoc-icon.svg" />
 </head>
 <body>
+<script type="text/javascript">
+   pidoc_generateDynamicContents();
+</script>
 
-<h1>Multi Gradient Comparison</h1>
-<p><em>Scripts &gt; EGo &gt; Multi Gradient Comparison</em></p>
+<h1>CustomGradientCorrect</h1>
 
-<h2>Summary</h2>
-<p>Runs three different gradient-removal processes on independent
-clones of a single calibrated image and shows you the corrected output
-and the background model from each. Lets you pick the best one for
-the target without committing to a single tool.</p>
-
-<img src="images/diagram.svg" alt="Gradient comparison flow" />
-
-<h2>What it does</h2>
-<ol>
-   <li>Clones the source so the <strong>original is never touched</strong>.</li>
-   <li>Runs <code>SpectrophotometricFluxCalibration</code> (SPFC) on the
-       clone — the prerequisite for MultiscaleGradientCorrection.
-       SPFC uses the chosen telescope setup's sensor QE curve and
-       filter parameters (broadband brand for LRGB/RGB; narrowband
-       wavelength and bandwidth for SHO/HOO/&hellip;). Mono images
-       run SPFC in single-channel mode driven by the FITS
-       <code>FILTER</code> keyword.</li>
-   <li>On three more clones of the SPFC-calibrated image, runs
-       <code>GradientCorrection</code> (GC),
-       <code>MultiscaleGradientCorrection</code> (MGC), and
-       <code>AutomaticBackgroundExtractor</code> (ABE). Keeps both the
-       corrected output and the gradient/background model from each.</li>
-</ol>
-
-<h2>Output windows</h2>
-<table>
-   <tr><th>Suffix</th><th>Content</th></tr>
-   <tr><td><code>&lt;id&gt;_GC</code></td><td>GradientCorrection result</td></tr>
-   <tr><td><code>&lt;id&gt;_GC_bg</code></td><td>GC background model</td></tr>
-   <tr><td><code>&lt;id&gt;_MGC</code></td><td>MultiscaleGradientCorrection result</td></tr>
-   <tr><td><code>&lt;id&gt;_MGC_bg</code></td><td>MGC background model</td></tr>
-   <tr><td><code>&lt;id&gt;_ABE</code></td><td>AutomaticBackgroundExtractor result</td></tr>
-   <tr><td><code>&lt;id&gt;_ABE_bg</code></td><td>ABE background model</td></tr>
-</table>
-<p>Six output windows in total. None are saved to disk.</p>
-
-<h2>Mono vs color</h2>
-<ul>
-   <li><strong>Mono</strong>: filter auto-detected from the FITS
-       <code>FILTER</code> keyword.</li>
-   <li><strong>Color</strong>: palette parsed from the image name
-       (SHO, HOO, HSO, OHS, HOS, LRGB, RGB). If none found, pick one
-       from the dropdown before running.</li>
-</ul>
-
-<div class="note">
-<strong>Customization.</strong> The telescope setup table, broadband
-filter brand curves, and narrowband bandwidth defaults live near the
-top of the script source. Edit them to match the curve names in your
-SPFC curve database.
+<div id="authors">
+<p>By Evan</p>
 </div>
 
-<h2>See also</h2>
-<ul>
-   <li><a href="../StretchComparison/StretchComparison.html">Stretch Comparison</a> — the same idea applied to non-linear stretches.</li>
-</ul>
+<hr class="separator"/>
 
-<hr/>
-<p style="font-size:0.85em; color:#666;">
-Part of the EGo PixInsight script set. PCL License 2.0.</p>
+<div id="brief">
+<p>Runs SpectrophotometricFluxCalibration followed by GradientCorrection, MultiscaleGradientCorrection, and AutomaticBackgroundExtractor on independent clones of the source, producing six output windows so you can pick the best correction. <a href="#__contents__">[more]</a></p></div>
+
+<div id="keywords">
+<p><strong>Keywords:</strong> gradient correction, SPFC, MGC, ABE, GradientCorrection, comparison</p>
+</div>
+
+<h3 class="pidoc_sectionTitle" id="__toc__">Contents</h3>
+<p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'toc', this );">[hide]</p>
+<div id="toc">
+<ul>
+<li class="pidoc_tocItem"><a href="#__Description__">1&emsp;Description</a></li>
+<li class="pidoc_tocItem"><a href="#__Usage__">2&emsp;Usage</a></li>
+<li class="pidoc_tocItem"><a href="#__related_scripts__">Related Scripts</a></li>
+</ul>
+</div>
+
+<div id="__contents__">
+
+<div class="pidoc_section" id="__Description__">
+   <h3 class="pidoc_sectionTitle">1&emsp;Description</h3>
+   <p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'Description', this );">[hide]</p>
+   <div id="Description">
+<p>For mono images, the filter is auto-detected from the FITS <span class="pidoc_code">FILTER</span> keyword. For color images, the palette is parsed from the image name (SHO, HOO, HSO, OHS, HOS, LRGB, RGB); if none is detected, the dropdown lets you pick one.</p>
+<p>SPFC uses the chosen telescope setup's sensor QE curve and filter parameters. The telescope setup table, broadband filter brand curves, and narrowband bandwidth values are defined near the top of the script source for easy customization.</p>
+   </div>
+</div>
+
+<div class="pidoc_section" id="__Usage__">
+   <h3 class="pidoc_sectionTitle">2&emsp;Usage</h3>
+   <p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'Usage', this );">[hide]</p>
+   <div id="Usage">
+<p>Open from <em>Scripts &gt; EGo &gt; Multi Gradient Comparison</em>. Select the source view and telescope setup, override the palette only if auto-detection failed, and click <em>Run</em>.</p>
+
+<dl class="pidoc_list">
+<dt>
+<p>Source view</p>
+</dt>
+<dd>
+<p>Any mono or color view. The original is cloned; the source itself is never modified.</p>
+</dd>
+<dt>
+<p>Telescope setup</p>
+</dt>
+<dd>
+<p>Identifies the sensor QE curve and the broadband filter brand or narrowband bandpass set used during acquisition.</p>
+</dd>
+<dt>
+<p>Palette override (color only)</p>
+</dt>
+<dd>
+<p>SHO, HOO, HSO, OHS, HOS, LRGB, or RGB. Auto-detected from the image name when possible.</p>
+</dd>
+</dl>
+
+   </div>
+</div>
+
+<div class="pidoc_section" id="__related_scripts__">
+   <h3 class="pidoc_sectionTitle">Related Scripts</h3>
+   <div id="related_scripts">
+<p><a href="../../scripts/StretchComparison/StretchComparison.html" title="../../scripts/StretchComparison/StretchComparison.html">StretchComparison</a>, <a href="../../scripts/OneClickLinearWorkflow/OneClickLinearWorkflow.html" title="../../scripts/OneClickLinearWorkflow/OneClickLinearWorkflow.html">OneClickLinearWorkflow</a></p>
+   </div>
+</div>
+
+<hr class="separator"/>
+
+<div id="copyright">
+   <p>Copyright &copy; 2026, Evan. PCL License 2.0.</p>
+</div>
+
+<div id="footer">
+   <p>Generated by the PixInsight Documentation Compiler script version 1.7.3 on 2026-05-27 18:40:20 UTC</p>
+</div>
+<br/>
+<br/>
+
+</div> <!-- contents -->
 
 </body>
 </html>
