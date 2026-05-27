@@ -22,9 +22,14 @@
 #      (regenerates the .xsgn sidecar next to it)
 #   3. Run this script (packs source/src with the fresh .xsgn files,
 #      rewrites updates.xri with the new SHA-1)
-#   4. In PixInsight: Script > CodeSign on updates.xri
-#      (adds an XML signature block in place - must be the LAST step;
-#      any subsequent rebuild rewrites the file and wipes it)
+#   4. (optional) In PixInsight: Script > CodeSign on updates.xri.
+#      Only do this once your CPD has been APPROVED and published by
+#      Pleiades - signing the .xri before approval makes the repo
+#      unloadable ("Unknown code signing identity"). If unsigned,
+#      the package and per-script .xsgn sidecars are still verified
+#      at install/run time; only the repo-level signature is missing.
+#      When signing, this MUST be the last step - any rebuild rewrites
+#      the file and discards the signature.
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -159,8 +164,9 @@ python3 tools/update_xri.py \
 
 cat >&2 <<'NEXT'
 
-next: sign updates.xri
-   PixInsight > Script > CodeSign, add updates.xri to the file list.
-   This MUST be the last step - any further rebuild rewrites the file
-   and discards the signature. Commit updates.xri after signing.
+next: commit updates.xri and the rebuilt package.
+   Repo-level .xri signing is OPTIONAL and only safe once your CPD has
+   been approved + published by Pleiades. Until then, ship updates.xri
+   unsigned - the per-script .xsgn sidecars inside the package are
+   still verified on install.
 NEXT
