@@ -31,13 +31,13 @@ after install (Help → Browse Documentation).
 Production (stable):
 
 ```
-https://raw.githubusercontent.com/<USER>/<REPO>/main/updates.xri
+https://raw.githubusercontent.com/EGoms/EGo/main/updates.xri
 ```
 
 Sandbox (testing):
 
 ```
-https://raw.githubusercontent.com/<USER>/<REPO>/sandbox/updates.xri
+https://raw.githubusercontent.com/EGoms/EGo/sandbox/updates.xri
 ```
 
 Add both URLs if you want to test pre-release builds. Enable the
