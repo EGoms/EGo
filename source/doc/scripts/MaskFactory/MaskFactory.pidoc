@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pidoc SYSTEM "http://pixinsight.com/pidoc/pidoc-1.0.dtd">
+<pidoc>
+
+<title>Mask Factory</title>
+
+<author><name>Evan</name></author>
+
+<keywords>
+   <keyword>masks</keyword>
+   <keyword>luminance mask</keyword>
+   <keyword>star mask</keyword>
+   <keyword>range mask</keyword>
+   <keyword>high-pass</keyword>
+   <keyword>narrowband</keyword>
+</keywords>
+
+<brief>
+   <p>One-pass generator for the masks most often needed when processing
+   narrowband nebulae and broadband galaxies.</p>
+</brief>
+
+<description>
+   <p>This script produces a selectable set of masks against the active
+   view: luminance (plus inverted and stretched variants), range masks
+   biased to highlights or shadows, star masks (with and without
+   inversion), a nebula-only mask built from a starless rendition, and
+   a high-pass mask for sharpening localization.</p>
+
+   <p>Each mask is created as a fresh image window named
+   <c>&lt;source&gt;_&lt;maskKind&gt;</c> so that multiple masks coexist
+   for comparison.</p>
+</description>
+
+<usage>
+   <p>Open from <e>Scripts &gt; EGo &gt; Mask Factory</e>. Pick the
+   source view, check the masks to generate, optionally adjust the
+   high-pass radius, and click <e>Generate</e>.</p>
+</usage>
+
+<parameter>
+   <name>Source view</name>
+   <description>Any view, mono or color. The ViewList defaults to the
+   active view.</description>
+</parameter>
+
+<parameter>
+   <name>Luminance variants</name>
+   <description>Plain luminance, inverted luminance, and stretched
+   luminance (a mid-tones transfer with m = 0.15 for a strong shadow
+   lift).</description>
+</parameter>
+
+<parameter>
+   <name>Range masks (highlights / shadows)</name>
+   <description>RangeSelection with smoothness 4 over [0.5, 1.0] for the
+   highlights mask and [0.0, 0.2] for the shadows mask.</description>
+</parameter>
+
+<parameter>
+   <name>Star mask and inverted star mask</name>
+   <description>StarXTerminator produces a starless rendition; the
+   difference (boosted with mtf 0.25) becomes the star mask. The
+   inverted variant flips it in place. Falls back to the built-in
+   StarMask if StarXT is unavailable.</description>
+</parameter>
+
+<parameter>
+   <name>Nebula-only mask</name>
+   <description>Luminance of the starless rendition, optionally
+   stretched. Requires StarXTerminator.</description>
+</parameter>
+
+<parameter>
+   <name>High-pass mask</name>
+   <description>0.5 + (image &minus; gaussian-blurred image). The
+   gaussian sigma is derived from the chosen radius (FWHM &divide; 2.355).</description>
+</parameter>
+
+<related>
+   <document>OneClickLinearWorkflow</document>
+   <document>ChannelPreview</document>
+</related>
+
+<copyright>
+   <p>Copyright &copy; 2026 Evan. PCL License 2.0.</p>
+</copyright>
+
+</pidoc>

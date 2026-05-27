@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pidoc SYSTEM "http://pixinsight.com/pidoc/pidoc-1.0.dtd">
+<pidoc>
+
+<title>Stretch Comparison</title>
+<author><name>Evan</name></author>
+
+<keywords>
+   <keyword>stretch</keyword>
+   <keyword>STF</keyword>
+   <keyword>MaskedStretch</keyword>
+   <keyword>ArcsinhStretch</keyword>
+   <keyword>GHS</keyword>
+   <keyword>AdaptiveStretch</keyword>
+</keywords>
+
+<brief>
+   <p>Clones the target image once per enabled stretch method and
+   applies each to a separate clone for side-by-side comparison.</p>
+</brief>
+
+<description>
+   <p>Methods covered: Auto-STF baked into HistogramTransformation,
+   MaskedStretch, ArcsinhStretch, GeneralizedHyperbolicStretch, and
+   AdaptiveStretch. The original is never modified; output windows are
+   suffixed with the method tag (<c>_STF</c>, <c>_MS</c>, <c>_AS</c>,
+   <c>_GHS</c>, <c>_AdS</c>) and remain open in PixInsight.</p>
+
+   <p>Per-method tuning constants live at the top of the script
+   source — edit them to match your preferred defaults.</p>
+</description>
+
+<usage>
+   <p>Open from <e>Scripts &gt; EGo &gt; Stretch Comparison</e>. Choose
+   the source view, enable the methods you want to compare, and click
+   <e>Run</e>.</p>
+</usage>
+
+<parameter>
+   <name>Source view</name>
+   <description>Any mono or color view. Must be linear.</description>
+</parameter>
+
+<parameter>
+   <name>Method toggles</name>
+   <description>Independent on/off for STF, MaskedStretch,
+   ArcsinhStretch, GHS, and AdaptiveStretch.</description>
+</parameter>
+
+<related>
+   <document>CustomGradientCorrect</document>
+   <document>OneClickLinearWorkflow</document>
+</related>
+
+<copyright><p>Copyright &copy; 2026 Evan. PCL License 2.0.</p></copyright>
+
+</pidoc>

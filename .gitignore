@@ -1,0 +1,23 @@
+## OS
+.DS_Store
+Thumbs.db
+
+## Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+## Python
+__pycache__/
+*.pyc
+.venv/
+
+## Local builds — packages/ IS committed (PixInsight needs to fetch
+## them via raw URL), so do NOT ignore packages/.
+## But ignore any incidental tarballs left at the repo root.
+/*.tar.gz
+/*.zip
+
+## Claude / IDE scratch
+.claude/

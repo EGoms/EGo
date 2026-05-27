@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+   <title>Channel Preview</title>
+   <style type="text/css">
+      body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+             color:#222; background:#fafafa; max-width:880px;
+             margin:1.5em auto; padding:0 1.5em; line-height:1.5; }
+      h1 { border-bottom:2px solid #335; padding-bottom:0.2em; }
+      h2 { margin-top:1.6em; color:#335; }
+      code { font-family:"SF Mono", Menlo, Consolas, monospace;
+             background:#eee; padding:0.1em 0.35em; border-radius:3px;
+             font-size:0.92em; }
+      table { border-collapse:collapse; margin:1em 0; }
+      th, td { border:1px solid #bbb; padding:0.4em 0.8em; text-align:left;
+               vertical-align:top; }
+      th { background:#e6e6ef; }
+      img { max-width:100%; display:block; margin:1em auto; }
+   </style>
+</head>
+<body>
+
+<h1>Channel Preview</h1>
+<p><em>Scripts &gt; EGo &gt; Channel Preview (all spaces)</em></p>
+
+<h2>Summary</h2>
+<p>One-shot generator of every common channel decomposition of a color
+image, plus an optional tiled contact sheet for at-a-glance
+comparison. Designed for narrowband palette experimentation (which
+channel carries the cleanest Ha vs OIII signal? which RGB combine
+gives the best a* / b*?) and for diagnosing broadband color casts.</p>
+
+<img src="images/diagram.svg" alt="Channel decompositions" />
+
+<h2>Color spaces extracted</h2>
+<table>
+   <tr><th>Space</th><th>Channels</th><th>Notes</th></tr>
+   <tr><td>RGB</td><td>R, G, B</td><td>Identity for color images.</td></tr>
+   <tr><td>CIE L*a*b*</td><td>L, a, b</td>
+       <td>Perceptual lightness + opponent color axes; a* (green-red) and
+       b* (blue-yellow) are useful for narrowband palette swaps.</td></tr>
+   <tr><td>CIE L*c*h*</td><td>L, c, h</td>
+       <td>Lab in cylindrical form; c is chroma, h is hue angle.</td></tr>
+   <tr><td>HSV</td><td>H, S, V</td><td>Hue + saturation + value.</td></tr>
+   <tr><td>HSI</td><td>H, S, I</td><td>Intensity variant of HSV; the
+       intensity channel is a common luminance proxy.</td></tr>
+   <tr><td>CIE XYZ</td><td>X, Y, Z</td>
+       <td>Linear tristimulus components.</td></tr>
+</table>
+
+<h2>Inputs</h2>
+<ul>
+   <li>Source view must be a color image. The dialog enforces this.</li>
+   <li>Pick which spaces to extract. Sensible defaults: RGB, Lab, HSI.</li>
+   <li>Optionally also create inverted channels (handy when the
+       interesting signal is in a low-value channel).</li>
+   <li>Optionally generate a tiled contact sheet. Defaults: 384&nbsp;px
+       tile size, 3 columns. The sheet is an 8-bit RGB image you can
+       save as PNG.</li>
+</ul>
+
+<h2>Output naming</h2>
+<p>Each extracted channel becomes an image window named
+<code>&lt;sourceId&gt;_&lt;space&gt;_&lt;channel&gt;</code>. The
+contact sheet, if requested, is
+<code>&lt;sourceId&gt;_contactSheet</code>. Duplicates are auto-suffixed
+with <code>_1</code>, <code>_2</code>, &hellip; so re-running on the
+same source doesn't clobber previous outputs.</p>
+
+<h2>See also</h2>
+<ul>
+   <li><a href="../NarrowbandBlends/NarrowbandBlends.html">Narrowband Blend Generator</a></li>
+   <li><a href="../DynamicNarrowbandBlends/DynamicNarrowbandBlends.html">Dynamic + Spatial NB Blends</a></li>
+</ul>
+
+<hr/>
+<p style="font-size:0.85em; color:#666;">
+Part of the EGo PixInsight script set. PCL License 2.0.</p>
+
+</body>
+</html>

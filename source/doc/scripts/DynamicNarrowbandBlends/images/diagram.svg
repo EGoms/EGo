@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300"
+     font-family="Helvetica, Arial, sans-serif" font-size="13">
+   <defs>
+      <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5"
+              markerWidth="6" markerHeight="6" orient="auto">
+         <path d="M0,0 L10,5 L0,10 z" fill="#335"/>
+      </marker>
+      <style>
+         .ch  { fill:#cfe8d0; stroke:#2e7d32; stroke-width:1.5; rx:6; ry:6; }
+         .sym { fill:#fff4d6; stroke:#8a6d00; stroke-width:1.5; rx:6; ry:6; }
+         .pm  { fill:#dcecff; stroke:#1d4f8a; stroke-width:1.5; rx:6; ry:6; }
+         .pc  { fill:#f3d6ff; stroke:#5e2b86; stroke-width:1.5; rx:6; ry:6; }
+         .hdr { fill:#335; font-weight:bold; }
+         .a   { stroke:#335; stroke-width:1.2; fill:none; marker-end:url(#arr); }
+      </style>
+   </defs>
+
+   <text x="20" y="22" class="hdr">Symbols field decouples formula from view IDs</text>
+
+   <!-- Channels (real view IDs) -->
+   <rect x="20" y="60" width="100" height="30" class="ch"/>
+   <text x="70" y="80" text-anchor="middle">Ha view</text>
+   <rect x="20" y="100" width="100" height="30" class="ch"/>
+   <text x="70" y="120" text-anchor="middle">OIII view</text>
+   <rect x="20" y="140" width="100" height="30" class="ch"/>
+   <text x="70" y="160" text-anchor="middle">SII view</text>
+
+   <!-- Symbol bindings -->
+   <rect x="180" y="60" width="180" height="110" class="sym"/>
+   <text x="270" y="80" text-anchor="middle">Symbols field</text>
+   <text x="270" y="100" text-anchor="middle" font-size="11">H = Ha</text>
+   <text x="270" y="118" text-anchor="middle" font-size="11">O = OIII</text>
+   <text x="270" y="136" text-anchor="middle" font-size="11">S = SII</text>
+   <text x="270" y="156" text-anchor="middle" font-size="11">gO = O^~O</text>
+
+   <!-- PixelMath instances -->
+   <rect x="420" y="50" width="180" height="42" class="pm"/>
+   <text x="510" y="69" text-anchor="middle">Dynamic SHO Universal</text>
+   <text x="510" y="85" text-anchor="middle" font-size="11">R=gO*S+~gO*H, G=..., B=O</text>
+
+   <rect x="420" y="100" width="180" height="42" class="pm"/>
+   <text x="510" y="119" text-anchor="middle">Dynamic HOO Universal</text>
+   <text x="510" y="135" text-anchor="middle" font-size="11">R=H, G=gHO*H+~gHO*O, B=O</text>
+
+   <rect x="420" y="150" width="180" height="42" class="pm"/>
+   <text x="510" y="169" text-anchor="middle">Spatial HOO|SHO L/R</text>
+   <text x="510" y="185" text-anchor="middle" font-size="11">X()-weighted bicolor</text>
+
+   <!-- ProcessContainer -->
+   <rect x="640" y="100" width="100" height="42" class="pc"/>
+   <text x="690" y="119" text-anchor="middle">Process</text>
+   <text x="690" y="135" text-anchor="middle">Container</text>
+
+   <!-- arrows -->
+   <path class="a" d="M120,76 L180,90"/>
+   <path class="a" d="M120,115 L180,115"/>
+   <path class="a" d="M120,156 L180,140"/>
+
+   <path class="a" d="M360,90  L420,71"/>
+   <path class="a" d="M360,115 L420,121"/>
+   <path class="a" d="M360,140 L420,171"/>
+
+   <path class="a" d="M600,71  L640,115"/>
+   <path class="a" d="M600,121 L640,121"/>
+   <path class="a" d="M600,171 L640,128"/>
+
+   <text x="20" y="280" font-size="11" fill="#666">
+      All formulas reference symbols, not concrete IDs. To re-target a
+      saved blend icon, edit the Symbols field of its PixelMath instance.
+   </text>
+</svg>

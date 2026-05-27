@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+   <title>Narrowband Blend Generator</title>
+   <style type="text/css">
+      body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+             color:#222; background:#fafafa; max-width:880px;
+             margin:1.5em auto; padding:0 1.5em; line-height:1.5; }
+      h1 { border-bottom:2px solid #335; padding-bottom:0.2em; }
+      h2 { margin-top:1.6em; color:#335; }
+      code { font-family:"SF Mono", Menlo, Consolas, monospace;
+             background:#eee; padding:0.1em 0.35em; border-radius:3px;
+             font-size:0.92em; }
+      table { border-collapse:collapse; margin:1em 0; }
+      th, td { border:1px solid #bbb; padding:0.4em 0.8em; text-align:left;
+               vertical-align:top; }
+      th { background:#e6e6ef; }
+      img { max-width:100%; display:block; margin:1em auto; }
+   </style>
+</head>
+<body>
+
+<h1>Narrowband Blend Generator</h1>
+<p><em>Scripts &gt; EGo &gt; Narrowband Blend Generator</em></p>
+
+<h2>Summary</h2>
+<p>Generates PixelMath process instances for a curated catalog of
+<strong>static</strong> narrowband blends — Classic Hubble (SHO), HOO,
+HSO, OHS, HOS, Foraxx-style, and a few Ha-into-LRGB recipes — using
+single-letter symbols in the formulas and the PixelMath
+<em>Symbols</em> field to bind those to real view IDs.</p>
+
+<img src="images/diagram.svg" alt="Narrowband blend catalog" />
+
+<h2>Catalog (selected)</h2>
+<table>
+   <tr><th>ID</th><th>R</th><th>G</th><th>B</th><th>Note</th></tr>
+   <tr><td>Classic_Hubble</td><td>S</td><td>H</td><td>O</td>
+       <td>The original SHO Hubble palette. Gold nebulae.</td></tr>
+   <tr><td>HOO</td><td>H</td><td>O</td><td>O</td>
+       <td>Bicolor Ha + OIII; cleanest output when SII is noisy.</td></tr>
+   <tr><td>HSO</td><td>H</td><td>S</td><td>O</td>
+       <td>R + G swap of SHO; reddish nebulae.</td></tr>
+   <tr><td>Foraxx-style</td><td colspan="3">PIP-weighted Ha/OIII mix</td>
+       <td>Smooth NB look without per-pixel masking.</td></tr>
+   <tr><td>Ha-into-L</td><td colspan="3">L = max(L, H)</td>
+       <td>Inject Ha detail into broadband L for LRGB targets.</td></tr>
+</table>
+<p>See the script source for the complete list (12 canonical palettes
+plus several Ha-into-LRGB recipes).</p>
+
+<h2>How it works</h2>
+<p>Formulas reference single-letter symbols (H, S, O, L, R, G, B). The
+PixelMath <em>Symbols</em> field is constructed from the bindings you
+set at the top of the dialog. Each blend is opened as its own
+PixelMath dialog — drag the title bar to the workspace to save it as
+an icon. (PixInsight has no scripting API to drop a workspace icon
+directly; launch-and-iconize is the supported path here.)</p>
+
+<h2>Compared to Dynamic + Spatial NB Blends</h2>
+<p>This script is for <em>static</em> palettes — the channels are
+combined with fixed coefficients. For per-pixel PIP-gated and
+spatially weighted blends, see the
+<a href="../DynamicNarrowbandBlends/DynamicNarrowbandBlends.html">Dynamic +
+Spatial NB Blends</a> script.</p>
+
+<h2>See also</h2>
+<ul>
+   <li><a href="../DynamicNarrowbandBlends/DynamicNarrowbandBlends.html">Dynamic + Spatial NB Blends</a></li>
+   <li><a href="../ChannelPreview/ChannelPreview.html">Channel Preview</a></li>
+</ul>
+
+<hr/>
+<p style="font-size:0.85em; color:#666;">
+Part of the EGo PixInsight script set. PCL License 2.0.</p>
+
+</body>
+</html>

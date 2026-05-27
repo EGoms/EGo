@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+   <title>Mask Factory</title>
+   <style type="text/css">
+      body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+             color:#222; background:#fafafa; max-width:880px;
+             margin:1.5em auto; padding:0 1.5em; line-height:1.5; }
+      h1 { border-bottom:2px solid #335; padding-bottom:0.2em; }
+      h2 { margin-top:1.6em; color:#335; }
+      code, pre { font-family:"SF Mono", Menlo, Consolas, monospace;
+                  background:#eee; padding:0.1em 0.35em; border-radius:3px;
+                  font-size:0.92em; }
+      table { border-collapse:collapse; margin:1em 0; }
+      th, td { border:1px solid #bbb; padding:0.4em 0.8em; text-align:left;
+               vertical-align:top; }
+      th { background:#e6e6ef; }
+      .note { background:#fffde7; border-left:4px solid #ffb300;
+              padding:0.6em 1em; margin:1em 0; }
+      img { max-width:100%; display:block; margin:1em auto; }
+   </style>
+</head>
+<body>
+
+<h1>Mask Factory</h1>
+<p><em>Scripts &gt; EGo &gt; Mask Factory</em></p>
+
+<h2>Summary</h2>
+<p>Generates the masks most useful for narrowband nebula and broadband
+galaxy processing in one pass. Each mask becomes a new image window
+named <code>&lt;source&gt;_&lt;maskKind&gt;</code> so multiple masks can
+coexist.</p>
+
+<img src="images/diagram.svg" alt="Mask catalog" />
+
+<h2>Masks produced</h2>
+<table>
+   <tr><th>Mask</th><th>Built from</th><th>Typical use</th></tr>
+   <tr><td>Luminance</td>
+       <td><code>CIEL($T)</code> (color) or <code>$T</code> (mono)</td>
+       <td>Generic luminance protection.</td></tr>
+   <tr><td>Luminance (inverted)</td>
+       <td><code>~CIEL($T)</code></td>
+       <td>Protect highlights / reveal shadows when stretching.</td></tr>
+   <tr><td>Stretched luminance</td>
+       <td><code>mtf(0.15, CIEL($T))</code></td>
+       <td>Strong shadow lift; protects faint nebula structures.</td></tr>
+   <tr><td>Highlights</td>
+       <td>RangeSelection [0.50, 1.00], smoothness 4</td>
+       <td>HDR compression, star protection.</td></tr>
+   <tr><td>Shadows</td>
+       <td>RangeSelection [0.00, 0.20], smoothness 4</td>
+       <td>Background noise reduction.</td></tr>
+   <tr><td>Star mask</td>
+       <td>Original minus StarXTerminator starless (boosted)</td>
+       <td>Star reduction, MMT operations on stars only.</td></tr>
+   <tr><td>Inverted star mask</td>
+       <td>complement of the above</td>
+       <td>Process nebula while leaving stars untouched.</td></tr>
+   <tr><td>Nebula-only mask</td>
+       <td>luminance of the starless</td>
+       <td>Curves and saturation work on nebula without star bloat.</td></tr>
+   <tr><td>High-pass</td>
+       <td>0.5 + (image − blurred)</td>
+       <td>Localized sharpening control.</td></tr>
+</table>
+
+<h2>Inputs</h2>
+<ul>
+   <li>Source view (the ViewList defaults to the active view).</li>
+   <li>Optional high-pass radius (px, default 16).</li>
+   <li>Optional toggle to retain the intermediate starless windows the
+       star-mask and nebula-only builders create.</li>
+</ul>
+
+<h2>Dependencies</h2>
+<ul>
+   <li><code>StarXTerminator</code> for the star mask and nebula-only
+       mask. If absent, the star mask falls back to the built-in
+       <code>StarMask</code> process, and the nebula-only mask is
+       skipped with a console warning.</li>
+   <li><code>RangeSelection</code> is available in current PixInsight
+       distributions; if missing, the range masks fall back to a
+       PixelMath threshold expression.</li>
+</ul>
+
+<div class="note">
+<strong>Tip.</strong> For narrowband post-processing, the most useful
+combination is the <em>nebula-only mask</em> paired with the
+<em>inverted star mask</em>: apply the first when you want to push
+nebula saturation and contrast, the second when you want to constrain
+NoiseXTerminator to background and ignore stars.
+</div>
+
+<h2>See also</h2>
+<ul>
+   <li><a href="../OneClickLinearWorkflow/OneClickLinearWorkflow.html">One-Click Linear Workflow</a></li>
+   <li><a href="../ChannelPreview/ChannelPreview.html">Channel Preview</a></li>
+</ul>
+
+<hr/>
+<p style="font-size:0.85em; color:#666;">
+Part of the EGo PixInsight script set. PCL License 2.0.</p>
+
+</body>
+</html>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pidoc SYSTEM "http://pixinsight.com/pidoc/pidoc-1.0.dtd">
+<pidoc>
+
+<title>Multi Gradient Comparison</title>
+<author><name>Evan</name></author>
+
+<keywords>
+   <keyword>gradient correction</keyword>
+   <keyword>SPFC</keyword>
+   <keyword>MGC</keyword>
+   <keyword>ABE</keyword>
+   <keyword>GradientCorrection</keyword>
+   <keyword>comparison</keyword>
+</keywords>
+
+<brief>
+   <p>Runs SpectrophotometricFluxCalibration followed by
+   GradientCorrection, MultiscaleGradientCorrection, and
+   AutomaticBackgroundExtractor on independent clones of the source,
+   producing six output windows so you can pick the best correction.</p>
+</brief>
+
+<description>
+   <p>For mono images, the filter is auto-detected from the FITS
+   <c>FILTER</c> keyword. For color images, the palette is parsed from
+   the image name (SHO, HOO, HSO, OHS, HOS, LRGB, RGB); if none is
+   detected, the dropdown lets you pick one.</p>
+
+   <p>SPFC uses the chosen telescope setup's sensor QE curve and filter
+   parameters. The telescope setup table, broadband filter brand
+   curves, and narrowband bandwidth values are defined near the top of
+   the script source for easy customization.</p>
+</description>
+
+<usage>
+   <p>Open from <e>Scripts &gt; EGo &gt; Multi Gradient Comparison</e>.
+   Select the source view and telescope setup, override the palette
+   only if auto-detection failed, and click <e>Run</e>.</p>
+</usage>
+
+<parameter>
+   <name>Source view</name>
+   <description>Any mono or color view. The original is cloned; the
+   source itself is never modified.</description>
+</parameter>
+
+<parameter>
+   <name>Telescope setup</name>
+   <description>Identifies the sensor QE curve and the broadband filter
+   brand or narrowband bandpass set used during acquisition.</description>
+</parameter>
+
+<parameter>
+   <name>Palette override (color only)</name>
+   <description>SHO, HOO, HSO, OHS, HOS, LRGB, or RGB. Auto-detected
+   from the image name when possible.</description>
+</parameter>
+
+<related>
+   <document>StretchComparison</document>
+   <document>OneClickLinearWorkflow</document>
+</related>
+
+<copyright><p>Copyright &copy; 2026 Evan. PCL License 2.0.</p></copyright>
+
+</pidoc>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+   <title>One-Click Linear Workflow</title>
+   <style type="text/css">
+      body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+             color:#222; background:#fafafa; max-width:880px;
+             margin:1.5em auto; padding:0 1.5em; line-height:1.5; }
+      h1 { border-bottom:2px solid #335; padding-bottom:0.2em; }
+      h2 { margin-top:1.6em; color:#335; }
+      code, pre { font-family:"SF Mono", Menlo, Consolas, monospace;
+                  background:#eee; padding:0.1em 0.35em; border-radius:3px;
+                  font-size:0.92em; }
+      pre { padding:0.7em 1em; overflow-x:auto; }
+      table { border-collapse:collapse; margin:1em 0; }
+      th, td { border:1px solid #bbb; padding:0.4em 0.8em; text-align:left;
+               vertical-align:top; }
+      th { background:#e6e6ef; }
+      .note { background:#fffde7; border-left:4px solid #ffb300;
+              padding:0.6em 1em; margin:1em 0; }
+      .warn { background:#fdecea; border-left:4px solid #d32f2f;
+              padding:0.6em 1em; margin:1em 0; }
+      img { max-width:100%; display:block; margin:1em auto; }
+      .menu { font-weight:bold; color:#553; }
+   </style>
+</head>
+
+<body>
+
+<h1>One-Click Linear Workflow</h1>
+<p><em>Scripts &gt; EGo &gt; One-Click Linear Workflow</em></p>
+
+<h2>Summary</h2>
+<p>Runs a curated linear-stage processing chain on the active view, with
+two presets tuned for the targets this author shoots most:
+<strong>narrowband nebulae</strong> (the default) and
+<strong>broadband galaxies</strong>.</p>
+
+<p>Each step is reversible (a single Edit &gt; Undo undoes the last
+process). The chain stops on the first failure or cancellation, leaving
+the image in a known intermediate state.</p>
+
+<img src="images/diagram.svg" alt="Workflow diagram" />
+
+<h2>Step sequence</h2>
+
+<table>
+   <tr><th>Step</th><th>Narrowband</th><th>Broadband galaxy</th>
+       <th>Notes</th></tr>
+   <tr><td>1. Gradient correction</td><td>yes</td><td>yes</td>
+       <td>Uses <code>GradientCorrection</code> (1.9.4+), falls back to
+       <code>AutomaticBackgroundExtractor</code> if not installed.</td></tr>
+   <tr><td>2. Plate solve</td><td>—</td><td>yes</td>
+       <td>Launches the bundled <code>ImageSolver</code> script for
+       confirmation.</td></tr>
+   <tr><td>3. SPCC</td><td>—</td><td>yes</td>
+       <td>Opens the
+       <code>SpectrophotometricColorCalibration</code> dialog with
+       broadband defaults; user picks white reference and filters.</td></tr>
+   <tr><td>4. BlurXTerminator</td><td>yes</td><td>yes</td>
+       <td>Non-stellar sharpening 0.85 (NB) / 0.75 (BB); stellar 0.20 /
+       0.25.</td></tr>
+   <tr><td>5. NoiseXTerminator</td><td>yes</td><td>yes</td>
+       <td>Detail 0.15, denoise 0.85.</td></tr>
+   <tr><td>6. Star split (optional)</td><td>yes</td><td>yes</td>
+       <td><code>StarXTerminator</code> with <code>stars=true</code> and
+       <code>unscreen=true</code>; produces stars and starless siblings.</td></tr>
+</table>
+
+<h2>Prerequisites</h2>
+<ul>
+   <li>PixInsight <strong>1.9.4</strong> (Lockhart) or later, V8 runtime.</li>
+   <li><a href="https://www.rc-astro.com/software/bxt/">BlurXTerminator</a>,
+       <a href="https://www.rc-astro.com/software/nxt/">NoiseXTerminator</a>,
+       and <a href="https://www.rc-astro.com/software/sxt/">StarXTerminator</a>
+       (RC Astro) for the AI steps. Each is detected at runtime; missing
+       ones are skipped with a console warning rather than aborting.</li>
+   <li>A linear master integration loaded as the active view. The image
+       must <em>not</em> already be stretched.</li>
+</ul>
+
+<h2>Dialog options</h2>
+
+<table>
+   <tr><th>Section</th><th>Field</th><th>Effect</th></tr>
+   <tr><td rowspan="2">Target type</td>
+       <td>Narrowband nebula</td>
+       <td>Skips plate solve and SPCC. BXT uses slightly stronger
+       non-stellar sharpening.</td></tr>
+   <tr><td>Broadband galaxy</td>
+       <td>Enables plate solve and SPCC. BXT uses balanced settings.</td></tr>
+   <tr><td rowspan="6">Steps</td>
+       <td>Gradient correction</td>
+       <td>Run GC (or ABE) first.</td></tr>
+   <tr><td>Plate solve</td>
+       <td>Launch ImageSolver — broadband only.</td></tr>
+   <tr><td>SPCC</td>
+       <td>Launch the SPCC dialog for manual confirmation —
+       broadband only.</td></tr>
+   <tr><td>BlurXTerminator</td><td>Run BXT.</td></tr>
+   <tr><td>NoiseXTerminator</td><td>Run NXT.</td></tr>
+   <tr><td>Star split</td><td>Run StarXTerminator to produce stars and
+       starless images.</td></tr>
+</table>
+
+<div class="note">
+<strong>Tip.</strong> For narrowband, the highest-impact change after
+this script is to remove stars with StarXTerminator and process the
+nebulosity and stars independently. The optional star-split step at the
+end gives you the two siblings ready for that workflow.
+</div>
+
+<div class="warn">
+<strong>Caveats.</strong>
+<ul>
+<li>The script defends against missing properties on the third-party
+    BXT/NXT/SXT instances with try/catch, so updates that rename a
+    parameter will silently fall back to that process's own defaults
+    rather than crashing the chain.</li>
+<li><code>Process.executeScriptGlobal("AdP/ImageSolver")</code> is the
+    documented way to launch the bundled solver from another script. If
+    your PI install has the script in a different category, the call
+    will warn and skip — solve manually, then re-run with SPCC enabled.</li>
+</ul>
+</div>
+
+<h2>See also</h2>
+<ul>
+   <li><a href="../MaskFactory/MaskFactory.html">Mask Factory</a></li>
+   <li><a href="../ChannelPreview/ChannelPreview.html">Channel Preview</a></li>
+</ul>
+
+<hr/>
+<p style="font-size:0.85em; color:#666;">
+Part of the EGo PixInsight script set. Released under the
+<a href="https://pixinsight.com/license/PCL-License-2.0.html">PCL
+License 2.0</a>.</p>
+
+</body>
+</html>

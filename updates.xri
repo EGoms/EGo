@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xri version="1.0">
+
+   <description>
+      <p>
+         EGo PixInsight scripts — a collection of PJSR scripts for
+         narrowband nebula and broadband galaxy processing, including
+         a one-click linear workflow, mask factory, channel preview,
+         narrowband blend generators, gradient and stretch comparison
+         tools.
+      </p>
+      <p>
+         All scripts target the PixInsight 1.9.4 (Lockhart) V8 runtime
+         and appear under Scripts &gt; EGo in the menu.
+      </p>
+      <p>
+         Source and issue tracker:
+         https://github.com/&lt;USER&gt;/&lt;REPO&gt;
+      </p>
+   </description>
+
+   <platform os="all" arch="noarch" version="1.9.4:1.9.9999">
+
+      <package fileName="packages/ego-scripts-20260527.tar.gz"
+               sha1="746c6447dc97c5628d7b0e530f3f2c2d28d8d96c"
+               type="script"
+               releaseDate="20260527">
+         <title>
+            EGo PJSR Scripts - 2026-05-27
+         </title>
+         <description>
+            <p>
+               Installs the following scripts under Scripts &gt; EGo:
+            </p>
+            <p>
+               - One-Click Linear Workflow<br/>
+               - Mask Factory<br/>
+               - Channel Preview (all spaces)<br/>
+               - Narrowband Blend Generator<br/>
+               - Dynamic + Spatial NB Blends<br/>
+               - Multi Gradient Comparison<br/>
+               - Stretch Comparison
+            </p>
+            <p>
+               Each script ships with its own documentation page,
+               accessible from within PixInsight after the update is
+               applied. Requires PixInsight 1.9.4 Lockhart or later
+               (V8 runtime).
+            </p>
+         </description>
+      </package>
+
+   </platform>
+
+</xri>

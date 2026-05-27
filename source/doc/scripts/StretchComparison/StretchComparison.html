@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+   <title>Stretch Comparison</title>
+   <style type="text/css">
+      body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+             color:#222; background:#fafafa; max-width:880px;
+             margin:1.5em auto; padding:0 1.5em; line-height:1.5; }
+      h1 { border-bottom:2px solid #335; padding-bottom:0.2em; }
+      h2 { margin-top:1.6em; color:#335; }
+      code { font-family:"SF Mono", Menlo, Consolas, monospace;
+             background:#eee; padding:0.1em 0.35em; border-radius:3px;
+             font-size:0.92em; }
+      table { border-collapse:collapse; margin:1em 0; }
+      th, td { border:1px solid #bbb; padding:0.4em 0.8em; text-align:left;
+               vertical-align:top; }
+      th { background:#e6e6ef; }
+      img { max-width:100%; display:block; margin:1em auto; }
+   </style>
+</head>
+<body>
+
+<h1>Stretch Comparison</h1>
+<p><em>Scripts &gt; EGo &gt; Stretch Comparison</em></p>
+
+<h2>Summary</h2>
+<p>Applies every enabled non-linear stretch method to an independent
+clone of the target and leaves N output windows open for side-by-side
+comparison. The original is never modified.</p>
+
+<img src="images/diagram.svg" alt="Stretch comparison flow" />
+
+<h2>Methods</h2>
+<table>
+   <tr><th>Method</th><th>Suffix</th><th>Notes</th></tr>
+   <tr><td>Auto-STF baked into HistogramTransformation</td><td><code>_STF</code></td>
+       <td>The "always-on" baseline. Shadows clipping −2.80&sigma;,
+       target background 0.25, per-channel (un-linked).</td></tr>
+   <tr><td>MaskedStretch</td><td><code>_MS</code></td>
+       <td>Iterative stretch with built-in highlight protection.
+       Target background 0.125, 100 iterations.</td></tr>
+   <tr><td>ArcsinhStretch</td><td><code>_AS</code></td>
+       <td>Preserves star color. Stretch factor 100.</td></tr>
+   <tr><td>GeneralizedHyperbolicStretch</td><td><code>_GHS</code></td>
+       <td>The fine-control workhorse. Defaults aimed at a moderate
+       initial stretch.</td></tr>
+   <tr><td>AdaptiveStretch</td><td><code>_AdS</code></td>
+       <td>Distribution-aware automatic stretch.</td></tr>
+</table>
+
+<h2>What you get</h2>
+<p>For each enabled method, the script clones the target and applies
+the stretch to the clone. Output windows are named
+<code>&lt;source&gt;&lt;suffix&gt;</code> (e.g.
+<code>M51_stack_STF</code>). They remain open in PixInsight and are
+not saved to disk.</p>
+
+<h2>Customizing</h2>
+<p>Per-method tuning constants live near the top of the script
+(<code>STF_SHADOWS_CLIPPING</code>, <code>STF_TARGET_BACKGROUND</code>,
+<code>MS_TARGET_BG</code>, <code>AS_STRETCH</code>, &hellip;). Edit
+them to make a particular method's defaults match your house style.</p>
+
+<h2>See also</h2>
+<ul>
+   <li><a href="../CustomGradientCorrect/CustomGradientCorrect.html">Multi Gradient Comparison</a></li>
+   <li><a href="../OneClickLinearWorkflow/OneClickLinearWorkflow.html">One-Click Linear Workflow</a> — for the linear stages that come before stretching.</li>
+</ul>
+
+<hr/>
+<p style="font-size:0.85em; color:#666;">
+Part of the EGo PixInsight script set. PCL License 2.0.</p>
+
+</body>
+</html>
