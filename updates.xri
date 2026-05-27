@@ -22,7 +22,7 @@
    <platform os="all" arch="noarch" version="1.9.4:1.9.9999">
 
       <package fileName="packages/ego-scripts-20260527.tar.gz"
-               sha1="fa8d4fa82a1d3040262590373260828badba258b"
+               sha1="b9b796fd97eb6e553236e88a023a52ad145bd9fe"
                type="script"
                releaseDate="20260527">
          <title>
@@ -50,7 +50,7 @@
       </package>
 
       <package fileName="packages/ego-doc-20260527.tar.gz"
-               sha1="d34a71e5d52df9bce31eb46b5e68ab2646f192fa"
+               sha1="b60589bd5dd2433f204df78a5ea0c4dd27e915b7"
                type="doc"
                releaseDate="20260527">
          <title>
