@@ -22,11 +22,7 @@
    <platform os="all" arch="noarch" version="1.9.4:1.9.9999">
 
       <package fileName="packages/ego-scripts-20260527.tar.gz"
-<<<<<<< HEAD
                sha1="519be56e65fa750a3885e97949198955bd2f8754"
-=======
-               sha1="065e78fa0875db29219d47eec44303d8ad635602"
->>>>>>> 4089bbd (docs: rewrite .pidoc sources in real PIDoc markup and ship compiled HTML)
                type="script"
                releaseDate="20260527">
          <title>

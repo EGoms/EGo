@@ -30,6 +30,23 @@ def main() -> int:
     p = Path(a.xri)
     s = p.read_text()
 
+    # Refuse to edit a file that's mid-merge or otherwise shaped weirdly.
+    # The regex substitutions below all use count=1, so any duplication of
+    # the target fields (e.g. from an unresolved rebase conflict that left
+    # both sides' sha1= lines in the file) would silently produce a broken
+    # manifest. Fail loudly instead.
+    for marker in ("<<<<<<<", "=======", ">>>>>>>"):
+        if marker in s:
+            sys.exit(f"refusing to edit {a.xri}: contains merge conflict marker "
+                     f"{marker!r}. Resolve the conflict by hand first.")
+
+    for field in ("fileName=", "sha1=", "releaseDate="):
+        n = s.count(field)
+        if n != 1:
+            sys.exit(f"refusing to edit {a.xri}: expected exactly one occurrence "
+                     f"of {field!r}, found {n}. File is not in the expected "
+                     f"single-package shape.")
+
     s = re.sub(r'fileName="[^"]*"',    f'fileName="{a.pkg}"',     s, count=1)
     s = re.sub(r'sha1="[^"]*"',        f'sha1="{a.sha1}"',        s, count=1)
     s = re.sub(r'releaseDate="[^"]*"', f'releaseDate="{a.date}"', s, count=1)
