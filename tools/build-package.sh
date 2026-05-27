@@ -10,26 +10,31 @@
 # Usage:
 #   tools/build-package.sh                  # date stamp = today (UTC)
 #   tools/build-package.sh 20260131         # override date stamp
-#   SKIP_SIGN_CHECK=1 tools/build-package.sh   # bypass .xsgn freshness check
 #
 # Output:
 #   packages/ego-scripts-<date>.tar.gz      (or .zip if PKG_FMT=zip)
 #   updates.xri rewritten in place
 #
-# Signed-release workflow (do these in order):
+# Code signing
+# ------------
+# This script does NOT sign anything. PixInsight's CodeSign tool only
+# runs inside PixInsight itself (Security.generateCodeSignatureFile is
+# a PJSR call), so signing can't happen in headless CI. The current
+# stance: ship unsigned until our CPD is approved + published by
+# Pleiades. Until then, signed .xsgn/.xri files cause hard "Unknown
+# code signing identity" failures on every machine that fetches the
+# repo - including the developer's own, when going through the remote-
+# repository fetch path.
+#
+# Once the CPD is approved, the manual signed-release flow is:
 #   1. Edit .js sources under source/src/scripts/EGo/
-#   2. In PixInsight: Script > CodeSign on each modified .js
-#      (regenerates the .xsgn sidecar next to it)
-#   3. Run this script (packs source/src with the fresh .xsgn files,
+#   2. PixInsight > Script > CodeSign on each modified .js
+#      (generates a sibling .xsgn sidecar)
+#   3. Run this script locally (packs source/src with the .xsgn files,
 #      rewrites updates.xri with the new SHA-1)
-#   4. (optional) In PixInsight: Script > CodeSign on updates.xri.
-#      Only do this once your CPD has been APPROVED and published by
-#      Pleiades - signing the .xri before approval makes the repo
-#      unloadable ("Unknown code signing identity"). If unsigned,
-#      the package and per-script .xsgn sidecars are still verified
-#      at install/run time; only the repo-level signature is missing.
-#      When signing, this MUST be the last step - any rebuild rewrites
-#      the file and discards the signature.
+#   4. Commit and push
+# Do NOT sign updates.xri while the auto-rebuild CI workflow is on -
+# CI will rewrite it on the next push and strip the signature.
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -54,34 +59,6 @@ if [[ ! -d source/doc/scripts ]]; then
 fi
 
 mkdir -p packages
-
-# Refuse to package stale or missing .xsgn sidecars. Every .js under
-# source/src/scripts/EGo/ must have a sibling .xsgn that is no older
-# than the .js itself - otherwise the script will fail verification
-# in PixInsight on install. Set SKIP_SIGN_CHECK=1 to bypass (e.g. for
-# an unsigned dry-run build).
-if [[ "${SKIP_SIGN_CHECK:-0}" != "1" ]]; then
-   missing=()
-   stale=()
-   while IFS= read -r -d '' js; do
-      xsgn="${js%.js}.xsgn"
-      if [[ ! -f "${xsgn}" ]]; then
-         missing+=("${js}")
-      elif [[ "${js}" -nt "${xsgn}" ]]; then
-         stale+=("${js}")
-      fi
-   done < <(find source/src/scripts/EGo -type f -name '*.js' -print0)
-
-   if (( ${#missing[@]} + ${#stale[@]} > 0 )); then
-      echo "error: refusing to package - signatures need regenerating" >&2
-      for f in "${missing[@]}"; do echo "  missing .xsgn for: ${f}" >&2; done
-      for f in "${stale[@]}";   do echo "  stale  .xsgn for: ${f}" >&2; done
-      echo "" >&2
-      echo "Run PixInsight > Script > CodeSign on the listed .js files," >&2
-      echo "then re-run this script. To bypass: SKIP_SIGN_CHECK=1 ..." >&2
-      exit 3
-   fi
-fi
 
 # Drop any older same-named build before rebuilding (idempotent within a day).
 rm -f "${SRC_PATH}" "${DOC_PATH}"
@@ -162,11 +139,3 @@ python3 tools/update_xri.py \
    --date     "${DATE}" \
    --xri      updates.xri
 
-cat >&2 <<'NEXT'
-
-next: commit updates.xri and the rebuilt package.
-   Repo-level .xri signing is OPTIONAL and only safe once your CPD has
-   been approved + published by Pleiades. Until then, ship updates.xri
-   unsigned - the per-script .xsgn sidecars inside the package are
-   still verified on install.
-NEXT
