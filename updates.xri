@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xri version="1.0">
-
    <description>
       <p>
          EGo PixInsight scripts — a collection of PJSR scripts for
@@ -18,13 +17,8 @@
          https://github.com/&lt;EGoms&gt;/&lt;EGo&gt;
       </p>
    </description>
-
    <platform os="all" arch="noarch" version="1.9.4:1.9.9999">
-
-      <package fileName="packages/ego-scripts-20260527.tar.gz"
-               sha1="fa8d4fa82a1d3040262590373260828badba258b"
-               type="script"
-               releaseDate="20260527">
+      <package fileName="packages/ego-scripts-20260527.tar.gz" sha1="57517c6cd93525c2e3d4b6f27d3872536474caf0" type="script" releaseDate="20260527">
          <title>
             EGo PJSR Scripts - 2026-05-27
          </title>
@@ -48,11 +42,7 @@
             </p>
          </description>
       </package>
-
-      <package fileName="packages/ego-doc-20260527.tar.gz"
-               sha1="d34a71e5d52df9bce31eb46b5e68ab2646f192fa"
-               type="doc"
-               releaseDate="20260527">
+      <package fileName="packages/ego-doc-20260527.tar.gz" sha1="eb6f91fb8364c6d8645740c095a3c73a09567d28" type="doc" releaseDate="20260527">
          <title>
             EGo PJSR Documentation - 2026-05-27
          </title>
@@ -65,7 +55,6 @@
             </p>
          </description>
       </package>
-
    </platform>
-
 </xri>
+<Signature developerId="Evan Gomolin" timestamp="2026-05-27T19:43:20.118Z" encoding="Base64">bdu8/nYQnHLs9O9HkYZotpBlyWoUlNBYO5YxeD0PVUmZl1SET8G2RCKdWoZdBvs48OyRf6sU9Z4gy61fD9iVCA==</Signature>
