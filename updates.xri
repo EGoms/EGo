@@ -23,7 +23,7 @@
 
       <package fileName="packages/ego-scripts-20260527.tar.gz"
 <<<<<<< HEAD
-               sha1="b85dcee06201eb2b79a1c3f3640705e66f7f8726"
+               sha1="519be56e65fa750a3885e97949198955bd2f8754"
 =======
                sha1="065e78fa0875db29219d47eec44303d8ad635602"
 >>>>>>> 4089bbd (docs: rewrite .pidoc sources in real PIDoc markup and ship compiled HTML)
