@@ -60,8 +60,10 @@ fi
 
 mkdir -p packages
 
-# Drop any older same-named build before rebuilding (idempotent within a day).
-rm -f "${SRC_PATH}" "${DOC_PATH}"
+# Drop ALL previously-built packages before rebuilding, so the dir only
+# ever holds the current build. Matching on date-stamped name alone would
+# leave yesterday's tarball behind once the date rolls over.
+rm -f packages/ego-scripts-* packages/ego-doc-*
 
 # PixInsight installs packages by type. type="script" packages are
 # registered as scripts; type="doc" packages are registered in the
