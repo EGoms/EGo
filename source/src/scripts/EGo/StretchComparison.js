@@ -409,7 +409,7 @@ var StretchComparisonDialog = class extends Dialog
 
             if ( !Dialog.browseScriptDocumentation( "StretchComparison" ) )
                Dialog.openBrowser(
-                  "file://" + CoreApplication.installationDirectory +
+                  "file://" + CoreApplication.binDirPath.replace( /\/bin\/?$/, "" ) +
                   "/doc/scripts/StretchComparison/StretchComparison.html",
                   "StretchComparison Documentation" );
 

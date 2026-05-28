@@ -816,7 +816,7 @@ var GradientComparisonDialog = class extends Dialog
 
          if ( !Dialog.browseScriptDocumentation( "CustomGradientCorrect" ) )
             Dialog.openBrowser(
-               "file://" + CoreApplication.installationDirectory +
+               "file://" + CoreApplication.binDirPath.replace( /\/bin\/?$/, "" ) +
                "/doc/scripts/CustomGradientCorrect/CustomGradientCorrect.html",
                "CustomGradientCorrect Documentation" );
 

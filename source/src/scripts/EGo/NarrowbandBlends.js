@@ -452,7 +452,7 @@ var NarrowbandBlendsDialog = class extends Dialog
 
             if ( !Dialog.browseScriptDocumentation( "NarrowbandBlends" ) )
                Dialog.openBrowser(
-                  "file://" + CoreApplication.installationDirectory +
+                  "file://" + CoreApplication.binDirPath.replace( /\/bin\/?$/, "" ) +
                   "/doc/scripts/NarrowbandBlends/NarrowbandBlends.html",
                   "NarrowbandBlends Documentation" );
 

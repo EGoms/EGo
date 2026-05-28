@@ -440,7 +440,7 @@ var MaskFactoryDialog = class extends Dialog
 
             if ( !Dialog.browseScriptDocumentation( "MaskFactory" ) )
                Dialog.openBrowser(
-                  "file://" + CoreApplication.installationDirectory +
+                  "file://" + CoreApplication.binDirPath.replace( /\/bin\/?$/, "" ) +
                   "/doc/scripts/MaskFactory/MaskFactory.html",
                   "MaskFactory Documentation" );
 

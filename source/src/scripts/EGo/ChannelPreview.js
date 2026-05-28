@@ -278,7 +278,7 @@ var ChannelPreviewDialog = class extends Dialog
 
             if ( !Dialog.browseScriptDocumentation( "ChannelPreview" ) )
                Dialog.openBrowser(
-                  "file://" + CoreApplication.installationDirectory +
+                  "file://" + CoreApplication.binDirPath.replace( /\/bin\/?$/, "" ) +
                   "/doc/scripts/ChannelPreview/ChannelPreview.html",
                   "ChannelPreview Documentation" );
 
