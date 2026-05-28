@@ -1,0 +1,161 @@
+\documentclass PIScriptDoc
+
+\script { MosaicPipeline }
+
+\keywords { mosaic, MosaicByCoordinates, GradientMergeMosaic, PhotometricMosaic, astrometric mosaic, image registration }
+
+\author { Evan }
+
+\copyright { 2026, Evan. PCL License 2.0. }
+
+\brief {
+   Two-phase astrometric mosaic pipeline: registers tiles with
+   MosaicByCoordinates, then merges them with either
+   GradientMergeMosaic (process) or the Mosaic-submenu scripts.
+}
+
+\description {
+   Builds a seamless mosaic from a set of plate-solved input tiles.
+   The pipeline runs in two phases.
+
+   \s{Phase 1 - Registration.} Every input tile is reprojected onto
+   a common astrometric frame using
+   \xref { ../MosaicByCoordinates/MosaicByCoordinates.html }
+         { MosaicByCoordinates }. The script pre-fills the input
+   list, output directory, suffix, and overwrite flag, then launches
+   MosaicByCoordinates so its dialog opens with everything in place.
+   Confirm the projection and mosaic dimensions and click \e{OK}.
+   MosaicByCoordinates writes one \c{<name><suffix>.xisf} per tile
+   into the chosen output directory.
+
+   \s{Phase 2A - GradientMergeMosaic.} On the \e{Process} path, the
+   registered tiles are fed to
+   \xref { ../../tools/GradientMergeMosaic/GradientMergeMosaic.html }
+         { GradientMergeMosaic }, which merges them in the gradient
+   domain to eliminate seams. This is the recommended path - the
+   process runs natively on the V8 runtime and works today.
+
+   \s{Phase 2B - Mosaic scripts.} On the \e{Scripts} path, the
+   registered tiles are opened as windows and the script tries to
+   launch \c{TrimMosaicTile} (optional) and \c{PhotometricMosaic} via
+   \c{Process.executeScriptGlobal}. These scripts are still on the
+   SpiderMonkey runtime as of PixInsight 1.9.4 and will fail to load;
+   the pipeline will report the error and stop. This mode is wired
+   up so it will work transparently as soon as those scripts are
+   ported to V8 - no changes to the pipeline needed.
+
+   Both modes require MosaicByCoordinates in Phase 1; it is the only
+   tile-registration step the pipeline performs.
+}
+
+\usage {
+   Open the script from \e{Scripts > EGo > Mosaic Pipeline}. Each
+   input tile must already have a valid astrometric solution
+   (ImageSolver, or solver-equipped acquisition software). Tiles
+   that are not plate-solved will be rejected by MosaicByCoordinates
+   in Phase 1.
+
+   \definition {
+      { Input tiles }
+      { File list of source tiles. Use \e{Add Files...} to pick
+        FITS/XISF images; \e{Remove} drops selected entries; \e{Clear}
+        empties the list. At least two tiles are required. }
+
+      { Output directory }
+      { Where MosaicByCoordinates writes the registered tiles. Must
+        exist. The same directory is read back in Phase 2 to locate
+        the merge inputs, so any external change to file names
+        between phases will break the pipeline. }
+
+      { Registered suffix }
+      { Suffix appended to each registered tile's basename. Defaults
+        to \c{_ra} to match MosaicByCoordinates' own default. }
+
+      { Overwrite existing }
+      { Forwarded to MosaicByCoordinates; if off and a registered
+        file already exists, MBC will abort. }
+
+      { GradientMergeMosaic mode }
+      { Runs the GMM process on the registered tiles. \e{Average
+        overlap} maps to GMM's Average combination type (better SNR
+        on overlapping regions, order-independent); unchecking it
+        selects Overlay. \e{Shrink} removes border pixels affected
+        by interpolation aliasing - the default of 1 is right for
+        most tiles. \e{Feather} controls the seam transition radius
+        in pixels. }
+
+      { Scripts > Mosaic mode }
+      { Opens the registered tiles as windows and attempts to launch
+        \c{TrimMosaicTile} (if checked) and \c{PhotometricMosaic} (if
+        checked). Currently warns up front - the underlying scripts
+        do not yet run on the V8 runtime. }
+   }
+}
+
+\section { Pipeline stages } {
+   \subsection { Phase 1: registration } {
+      Pre-fills \c{engine_*} parameters (the keys
+      \c{PersistentObject.LoadParameters} consumes for
+      \c{MosaicByCoordinatesEngine}, whose prefix is \c{"engine"}),
+      then calls
+      \c{Process.executeScriptGlobal("MosaicByCoordinates/MosaicByCoordinates")}.
+      After MBC returns, the script computes the expected output
+      paths (\c{<outputDir>/<basename><suffix>.xisf}) and aborts if
+      any are missing.
+   }
+
+   \subsection { Phase 2A: GradientMergeMosaic } {
+      Builds \c{targetFrames} as \c{[[true, path], ...]} and runs the
+      GMM process with the user-selected combination type, shrink,
+      and feather. The merged mosaic is left as an open window for
+      further linear processing.
+   }
+
+   \subsection { Phase 2B: Mosaic scripts (deferred) } {
+      Opens each registered tile as a window. Attempts to launch
+      \c{JohnMurphy/PhotometricMosaic/TrimMosaicTile} and
+      \c{JohnMurphy/PhotometricMosaic/PhotometricMosaic} via
+      \c{Process.executeScriptGlobal}, wrapped in try/catch. On
+      failure (the expected outcome today) it logs a clear note that
+      the script is still on SpiderMonkey and continues with the
+      next one if any.
+   }
+}
+
+\section { Notes } {
+   \subsection { Plate solutions } {
+      Every input tile must carry a usable astrometric solution.
+      Phase 1 fails fast if a tile lacks one - solve missing tiles
+      with \c{ImageSolver} (Scripts > Image Analysis) and re-run.
+   }
+
+   \subsection { Linear vs nonlinear input } {
+      Both merge backends accept linear or nonlinear data and
+      preserve linearity where applicable, but mixing linear and
+      nonlinear tiles in the same run will produce visible
+      brightness mismatches that no merge can hide. Keep tiles in
+      the same processing state.
+   }
+
+   \subsection { Parameter-passing fragility } {
+      Phase 1 relies on MosaicByCoordinatesEngine keeping its
+      \c{"engine"} PersistentObject prefix. If a future
+      MosaicByCoordinates version changes that prefix, the pre-fill
+      will silently no-op and the MBC dialog will open empty. The
+      pipeline will still run if the user populates MBC manually,
+      but the output-path check at the end of Phase 1 will fail
+      unless the chosen suffix and output dir match what was passed
+      to this script.
+   }
+}
+
+\relatedscript OneClickLinearWorkflow
+\relatedscript MaskFactory
+
+\reference MosaicByCoordinates_doc { Andres del Pozo and Juan Conejero, \e{MosaicByCoordinates script}, PixInsight reference documentation. }
+
+\reference GradientMergeMosaic_doc { \e{GradientMergeMosaic process}, PixInsight reference documentation. }
+
+\reference PhotometricMosaic_doc { John Murphy, \e{PhotometricMosaic script}, https://astroprocessing.com/ }
+
+\make
