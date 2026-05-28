@@ -268,7 +268,7 @@ function runGHS( view )
 {
    var P = new GeneralizedHyperbolicStretch;
    try {
-      P.stretchType = GeneralizedHyperbolicStretch.prototype.GeneralisedHyperbolic;
+      P.stretchType = GeneralizedHyperbolicStretch.GeneralisedHyperbolic;
    } catch ( e ) {
       trySet( P, "stretchType", 0 );
    }
@@ -464,7 +464,7 @@ function main()
       (new MessageBox(
          "No images are open. Open the image you want to stretch " +
          "and re-run this script.",
-         TITLE, StdIcon_Error, StdButton_Ok )).execute();
+         TITLE, StdIcon.Error, StdButton.Ok )).execute();
       return;
    }
 
@@ -477,7 +477,7 @@ function main()
    {
       (new MessageBox(
          "No target image selected.",
-         TITLE, StdIcon_Error, StdButton_Ok )).execute();
+         TITLE, StdIcon.Error, StdButton.Ok )).execute();
       return;
    }
 
@@ -486,7 +486,7 @@ function main()
    {
       (new MessageBox(
          "No stretch methods selected.",
-         TITLE, StdIcon_Information, StdButton_Ok )).execute();
+         TITLE, StdIcon.Information, StdButton.Ok )).execute();
       return;
    }
 

@@ -134,8 +134,8 @@ function runGradientMergeMosaic( registeredPaths, opts )
    try { GMM.inputHints      = "";    } catch ( e ) {}
    try { GMM.outputHints     = "";    } catch ( e ) {}
    try { GMM.generateMask    = false; } catch ( e ) {}
-   try { GMM.type            = opts.gmmAverage ? GradientMergeMosaic.prototype.Average
-                                               : GradientMergeMosaic.prototype.Overlay; } catch ( e ) {}
+   try { GMM.type            = opts.gmmAverage ? GradientMergeMosaic.Average
+                                               : GradientMergeMosaic.Overlay; } catch ( e ) {}
    try { GMM.shrinkRadius    = opts.gmmShrink;  } catch ( e ) {}
    try { GMM.featherRadius   = opts.gmmFeather; } catch ( e ) {}
    try { GMM.blackPoint      = 0.0;   } catch ( e ) {}
@@ -313,7 +313,7 @@ var PipelineDialog = class extends Dialog
       // --- Output dir + suffix ---
       this.outDirLabel = new Label( this );
       this.outDirLabel.text = "Output directory:";
-      this.outDirLabel.textAlignment = TextAlign_Right | TextAlign_VertCenter;
+      this.outDirLabel.textAlignment = TextAlignment.Right | TextAlignment.VertCenter;
 
       this.outDirEdit = new Edit( this );
       this.outDirEdit.text = "";
@@ -336,7 +336,7 @@ var PipelineDialog = class extends Dialog
 
       this.suffixLabel = new Label( this );
       this.suffixLabel.text = "Registered suffix:";
-      this.suffixLabel.textAlignment = TextAlign_Right | TextAlign_VertCenter;
+      this.suffixLabel.textAlignment = TextAlignment.Right | TextAlignment.VertCenter;
 
       this.suffixEdit = new Edit( this );
       this.suffixEdit.text = "_ra";
@@ -391,10 +391,10 @@ var PipelineDialog = class extends Dialog
 
       let gmmShrinkLabel = new Label( this );
       gmmShrinkLabel.text = "Shrink:";
-      gmmShrinkLabel.textAlignment = TextAlign_Right | TextAlign_VertCenter;
+      gmmShrinkLabel.textAlignment = TextAlignment.Right | TextAlignment.VertCenter;
       let gmmFeatherLabel = new Label( this );
       gmmFeatherLabel.text = "Feather:";
-      gmmFeatherLabel.textAlignment = TextAlign_Right | TextAlign_VertCenter;
+      gmmFeatherLabel.textAlignment = TextAlignment.Right | TextAlignment.VertCenter;
 
       let gmmRow = new HorizontalSizer;
       gmmRow.spacing = 6;
