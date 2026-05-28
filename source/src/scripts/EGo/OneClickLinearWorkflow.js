@@ -355,7 +355,7 @@ var WorkflowDialog = class extends Dialog
 
             if ( !Dialog.browseScriptDocumentation( "OneClickLinearWorkflow" ) )
                Dialog.openBrowser(
-                  "file://" + CoreApplication.installationDirectory +
+                  "file://" + CoreApplication.binDirPath.replace( /\/bin\/?$/, "" ) +
                   "/doc/scripts/OneClickLinearWorkflow/OneClickLinearWorkflow.html",
                   "OneClickLinearWorkflow Documentation" );
 
