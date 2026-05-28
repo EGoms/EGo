@@ -340,9 +340,9 @@ function buildPixelMath( blend, nameMap, opts )
       P.newImageAlpha  = false;
       try {
          P.newImageColorSpace = blend.singleExpression
-                                ? PixelMath.prototype.Gray
-                                : PixelMath.prototype.RGB;
-         P.newImageSampleFormat = PixelMath.prototype.f32;
+                                ? PixelMath.Gray
+                                : PixelMath.RGB;
+         P.newImageSampleFormat = PixelMath.f32;
       } catch ( e ) { /* constants not available on this build */ }
    }
    else
@@ -380,10 +380,10 @@ function resampleInPlace( view, targetMaxDim )
    if ( maxSide <= targetMaxDim ) return;
    var scale = targetMaxDim / maxSide;
    var P = new Resample;
-   try { P.mode = Resample.prototype.AbsolutePixels; } catch ( e ) {}
+   try { P.mode = Resample.AbsolutePixels; } catch ( e ) {}
    P.xSize = Math.max( 1, Math.round( img.width  * scale ) );
    P.ySize = Math.max( 1, Math.round( img.height * scale ) );
-   try { P.interpolation = Resample.prototype.Auto; } catch ( e ) {}
+   try { P.interpolation = Resample.Auto; } catch ( e ) {}
    P.executeOn( view );
 }
 
@@ -726,7 +726,7 @@ var NarrowbandBlendsPreviewDialog = class extends Dialog
          (new MessageBox(
             "At least Ha and OIII must be selected. (Most blends also need SII; " +
             "LRGB-style blends additionally need L/R/G/B.)",
-            TITLE, StdIcon_Information, StdButton_Ok )).execute();
+            TITLE, StdIcon.Information, StdButton.Ok )).execute();
          return;
       }
 
@@ -817,7 +817,7 @@ var NarrowbandBlendsPreviewDialog = class extends Dialog
       if ( this.selectedCell == null )
       {
          (new MessageBox( "Click a tile to select a blend first.",
-                          TITLE, StdIcon_Information, StdButton_Ok )).execute();
+                          TITLE, StdIcon.Information, StdButton.Ok )).execute();
          return null;
       }
       var blend   = this.selectedCell.blend;
@@ -829,7 +829,7 @@ var NarrowbandBlendsPreviewDialog = class extends Dialog
             "Blend '" + blend.label + "' needs channels: " +
             missing.join( ", " ) + "\n\nFill them in above and click " +
             "Refresh, or pick a different blend.",
-            TITLE, StdIcon_Warning, StdButton_Ok )).execute();
+            TITLE, StdIcon.Warning, StdButton.Ok )).execute();
          return null;
       }
       for ( var i = 0; i < ALL_KEYS.length; ++i )
@@ -864,7 +864,7 @@ var NarrowbandBlendsPreviewDialog = class extends Dialog
       catch ( e ) {
          warn( "LAUNCH FAILED: " + e.toString() );
          (new MessageBox( "P.launch() failed: " + e.toString(),
-                          TITLE, StdIcon_Error, StdButton_Ok )).execute();
+                          TITLE, StdIcon.Error, StdButton.Ok )).execute();
       }
    }
 
@@ -877,15 +877,15 @@ var NarrowbandBlendsPreviewDialog = class extends Dialog
       if ( aw.isNull )
       {
          (new MessageBox( "No active window to apply to.",
-                          TITLE, StdIcon_Warning, StdButton_Ok )).execute();
+                          TITLE, StdIcon.Warning, StdButton.Ok )).execute();
          return;
       }
       var av = aw.mainView;
       var confirm = new MessageBox(
          "Apply '" + sel.blend.label + "' in place on view '" + av.id + "'?\n\n" +
          "This is destructive. Use Edit > Undo to revert.",
-         TITLE, StdIcon_Question, StdButton_Ok, StdButton_Cancel );
-      if ( confirm.execute() != StdButton_Ok ) return;
+         TITLE, StdIcon.Question, StdButton.Ok, StdButton.Cancel );
+      if ( confirm.execute() != StdButton.Ok ) return;
 
       var P = buildPixelMath( sel.blend, sel.nameMap, { createNew: false } );
       console.show();
@@ -909,7 +909,7 @@ function main()
       (new MessageBox(
          "No images are open. Open your Ha / OIII / SII (and optionally " +
          "L / R / G / B) channel images and re-run this script.",
-         TITLE, StdIcon_Error, StdButton_Ok )).execute();
+         TITLE, StdIcon.Error, StdButton.Ok )).execute();
       return;
    }
    var dlg = new NarrowbandBlendsPreviewDialog;
