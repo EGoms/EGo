@@ -73,9 +73,12 @@ case "${PKG_FMT}" in
    tar.gz)
       # -C source: archive paths are relative to source/, so src/ and
       # doc/ appear at the archive root - exactly what PixInsight wants.
+      # src/scripts/MosaicEGo is tracked in git but deliberately kept out
+      # of the public update package (private port, not for distribution).
       tar -C source \
          --exclude='.gitkeep' \
          --exclude='.DS_Store' \
+         --exclude='src/scripts/MosaicEGo' \
          -czf "${SRC_PATH}" src
 
       # Ship only the rendered per-script HTML (and its images);
@@ -95,7 +98,7 @@ case "${PKG_FMT}" in
       ;;
    zip)
       ( cd source && zip -qr "../${SRC_PATH}" src \
-         -x '*/.gitkeep' '*/.DS_Store' )
+         -x '*/.gitkeep' '*/.DS_Store' 'src/scripts/MosaicEGo/*' )
       ( cd source && zip -qr "../${DOC_PATH}" doc \
          -x 'doc/pidoc/*' 'doc/docs/*' 'doc/pjsr/*' 'doc/tools/*' \
             '*.pidoc' '*.md' '*/.gitkeep' '*/.DS_Store' )
