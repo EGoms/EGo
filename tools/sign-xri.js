@@ -72,6 +72,10 @@ function main()
    {
       keys.publicKey.secureFill();
       keys.privateKey.secureFill();
+      console.criticalln( "** sign-xri.js: invalid signing keys file or wrong password. "
+         + "Check that the password file contains EXACTLY the password with no trailing "
+         + "newline (use: printf '%s' 'PW' > file, never echo)." );
+      console.flush();
       throw new Error( "sign-xri.js: invalid signing keys file or wrong password" );
    }
 
