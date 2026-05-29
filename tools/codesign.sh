@@ -116,6 +116,9 @@ chmod 700 "$WORK_DIR"
 
 LIST_FILE="$WORK_DIR/targets.txt"
 ENT_FILE="$WORK_DIR/entitlements.txt"
+# The worker writes its failure reason here; PixInsight console output does
+# not reach our stdout under -r/--force-exit, so this is how we learn why.
+STATUS_FILE="$WORK_DIR/status.txt"
 
 # Write the target manifest (one absolute path per line).
 printf '%s\n' "${ABS_TARGETS[@]}" > "$LIST_FILE"
@@ -179,11 +182,17 @@ for s in "${SIG_PATHS[@]}"; do
    if [[ -f "$s" ]]; then PRE_MTIMES+=("$(mtime_of "$s")"); else PRE_MTIMES+=("0"); fi
 done
 
-RUN_ARG="-r=${ABS_WORKER},keys=${ABS_KEYS},pwfile=${ABS_PW},list=${LIST_FILE},entfile=${ENT_FILE}"
+RUN_ARG="-r=${ABS_WORKER},keys=${ABS_KEYS},pwfile=${ABS_PW},list=${LIST_FILE},entfile=${ENT_FILE},status=${STATUS_FILE}"
 set +e
-"$PI_BIN" -n --automation-mode --no-attach "$RUN_ARG" --force-exit
+"$PI_BIN" -n --automation-mode "$RUN_ARG" --force-exit
 PI_STATUS=$?
 set -e
+
+# Surface the worker's failure reason if it recorded one (PixInsight console
+# output does not reach our stdout under -r/--force-exit).
+if [[ -s "$STATUS_FILE" ]]; then
+   echo "worker: $(cat "$STATUS_FILE")" >&2
+fi
 
 # Verify each expected signature exists and is newer than before the run.
 FAILED=0

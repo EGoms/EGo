@@ -113,20 +113,27 @@ ABS_WORKER="$REPO_ROOT/$WORKER"
 ABS_KEYS="$(cd "$(dirname "$KEYS_FILE")" && pwd)/$(basename "$KEYS_FILE")"
 ABS_XRI="$(cd "$(dirname "$XRI")" && pwd)/$(basename "$XRI")"
 ABS_PW="$(cd "$(dirname "$PW_FILE")" && pwd)/$(basename "$PW_FILE")"
+# The worker writes its failure reason here; PixInsight console output does
+# not reach our stdout under -r/--force-exit.
+STATUS_FILE="$WORK_DIR/status.txt"
 
 echo "Signing $XRI with $PI_BIN ..." >&2
 
-RUN_ARG="-r=${ABS_WORKER},keys=${ABS_KEYS},pwfile=${ABS_PW},xri=${ABS_XRI}"
+RUN_ARG="-r=${ABS_WORKER},keys=${ABS_KEYS},pwfile=${ABS_PW},xri=${ABS_XRI},status=${STATUS_FILE}"
 set +e
-"$PI_BIN" -n --automation-mode --no-attach "$RUN_ARG" --force-exit
+"$PI_BIN" -n --automation-mode "$RUN_ARG" --force-exit
 PI_STATUS=$?
 set -e
 
-# PixInsight's exit code under --force-exit is not a reliable signal for
-# in-script failures, so verify a <Signature> element now exists in the file.
-if ! grep -q '<Signature' "$XRI"; then
-   echo "error: no <Signature> element found in $XRI after signing (PixInsight exit $PI_STATUS)" >&2
+# The worker writes a status line: "OK ..." on success, "ERROR: ..." on
+# failure. PixInsight's exit code under --force-exit is not a reliable
+# signal, and a stale <Signature> from a previous run could otherwise mask a
+# failure - so require the explicit OK marker from THIS run.
+STATUS="$( [[ -s "$STATUS_FILE" ]] && cat "$STATUS_FILE" || true )"
+if [[ "$STATUS" != OK* ]]; then
+   echo "error: updates.xri was not signed (PixInsight exit $PI_STATUS)" >&2
+   [[ -n "$STATUS" ]] && echo "worker: $STATUS" >&2
    exit 1
 fi
 
-echo "Done: $XRI signed."
+echo "Done: $XRI signed. ${STATUS#OK }"
