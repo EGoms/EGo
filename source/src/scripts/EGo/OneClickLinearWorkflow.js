@@ -35,6 +35,19 @@ CoreApplication.ensureMinimumVersion( 1, 9, 4 );
 #define VERSION "1.0.0"
 #define TITLE   "One-Click Linear Workflow"
 
+// ImageSolver ships as a PJSR script, not a process, and PJSR has no API to
+// launch another feature script. Include it as a library instead: defining
+// USE_SOLVER_LIBRARY skips its main(), exposing the ImageSolver engine and
+// ImageSolverDialog so we can drive a plate solve directly. The companion
+// defines/includes are what the library expects (mirrors BatchFrameAcquisition).
+#define USE_SOLVER_LIBRARY true
+#define SETTINGS_MODULE "SOLVER"
+#define STAR_CSV_FILE   (File.systemTempDirectory + format( "/stars-%03d.csv", CoreApplication.instance ))
+#include "../AdP/WCSmetadata.jsh"
+#include "../AdP/AstronomicalCatalogs.jsh"
+#include "../AdP/ImageSolver.js"
+#include "../AdP/SearchCoordinatesDialog.js"
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -152,21 +165,57 @@ function stepNoiseXTerminator( view )
 
 function stepImageSolver()
 {
-   // ImageSolver is a script, not a process. The cleanest "one-click" hook
-   // for galaxies is to just open the SPCC dialog after a manual solve, but
-   // we'll also offer to launch the bundled ImageSolver script if present.
    try
    {
-      log( "Opening ImageSolver script - confirm and run, then close." );
-      Parameters.clear();
-      let path = File.systemTempDirectory + "/.iws_unused";
-      // The standard ImageSolver script is at #script-dir/AdP/ImageSolver.js
-      Process.executeScriptGlobal( "AdP/ImageSolver" );
-      return true;
+      let targetWindow = ImageWindow.activeWindow;
+      if ( !targetWindow || targetWindow.isNull )
+      {
+         warn( "No active window to plate-solve; skipping." );
+         return false;
+      }
+
+      log( "Opening ImageSolver - confirm settings and solve, then it returns here." );
+
+      // Reproduce ImageSolver's own interactive flow against the active window.
+      let solver = new ImageSolver;
+      let dialog;
+      for ( ;; )
+      {
+         solver.Init( targetWindow, false /*prioritizeSettings*/ );
+         dialog = new ImageSolverDialog( solver.solverCfg, solver.metadata, true /*showTargetImage*/ );
+         if ( dialog.execute() )
+            break;
+         if ( !dialog.resetRequest )
+         {
+            warn( "Plate solve cancelled; continuing without a fresh solution." );
+            return false;
+         }
+         solver = new ImageSolver;
+      }
+      if ( solver.error )
+      {
+         warn( "ImageSolver reported an error; skipping plate solve." );
+         return false;
+      }
+
+      solver.solverCfg = dialog.solverCfg;
+      solver.solverCfg.SaveSettings();
+      solver.metadata = dialog.metadata;
+      solver.metadata.SaveSettings();
+
+      if ( solver.SolveImage( targetWindow ) )
+      {
+         solver.metadata.SaveSettings();
+         log( "Plate solve succeeded." );
+         return true;
+      }
+
+      warn( "Plate solve did not converge; solve manually if SPCC fails." );
+      return false;
    }
    catch ( e )
    {
-      warn( "Could not launch ImageSolver script automatically: " + e.message );
+      warn( "ImageSolver step failed: " + e.message );
       warn( "Solve the image manually, then re-run with SPCC enabled." );
       return true;
    }
