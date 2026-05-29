@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+PixInsight XML Code Signature Format - XSGN version 1.0
+Created with PixInsight software - https://pixinsight.com/
+-->
+<xsgn version="1.0" xmlns="http://www.pixinsight.com/xsgn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.pixinsight.com/xsgn http://pixinsight.com/xsgn/xsgn-1.0.xsd">
+   <CreationTime>2026-05-29T14:21:40.123Z</CreationTime>
+   <Signature version="1.0" scriptId="MaskFactory" developerId="Evan Gomolin">
+      <Timestamp>2026-05-29T14:21:40.123Z</Timestamp>
+      <CodeSignature encoding="Base64">ctJ+MIJRZx6nilorAbTnD3AuGSZRqm3w4YRsEAlwdhVTX/nkkzZm99rCmgeWQNt/D5c1GWIgnUxvj5Zs2imgDQ==</CodeSignature>
+   </Signature>
+</xsgn>
