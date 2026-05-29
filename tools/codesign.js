@@ -89,6 +89,13 @@ function main()
    {
       keys.publicKey.secureFill();
       keys.privateKey.secureFill();
+      // Flush BEFORE throwing: under --force-exit the console buffer is
+      // discarded, so an unflushed error message is lost and the run looks
+      // like a silent "no signature produced" failure.
+      console.criticalln( "** codesign.js: invalid signing keys file or wrong password. "
+         + "Check that the password file contains EXACTLY the password with no trailing "
+         + "newline (use: printf '%s' 'PW' > file, never echo)." );
+      console.flush();
       throw new Error( "codesign.js: invalid signing keys file or wrong password" );
    }
 
@@ -122,6 +129,7 @@ function main()
                         keys.publicKey,
                         keys.privateKey );
          console.noteln( "* Script signature generated: <raw>" + signaturePath + "</raw>" );
+         console.flush(); // survive --force-exit
          ++success;
       }
    }
