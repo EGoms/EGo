@@ -148,4 +148,22 @@ function main()
       throw new Error( "codesign.js: " + (targets.length - success) + " file(s) failed to sign" );
 }
 
-main();
+try
+{
+   main();
+}
+catch ( e )
+{
+   // PixInsight console output and uncaught exceptions do NOT reach the
+   // parent process stdout under -r/--force-exit, which makes headless/CI
+   // failures look like silent "no signature produced" errors. Write the
+   // reason to the status file (if provided) so tools/codesign.sh can
+   // surface it. Then re-throw so the GUI Process Console still shows it.
+   let statusPath = argValue( "status" );
+   if ( statusPath != null )
+   {
+      try { File.writeTextFile( statusPath, "ERROR: " + e.toString() + "\n" ); }
+      catch ( _ ) {}
+   }
+   throw e;
+}

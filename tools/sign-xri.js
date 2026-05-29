@@ -93,19 +93,54 @@ function main()
       keys.privateKey.secureFill();
    }
 
-   // Report what was written. Note: .valid reflects whether THIS machine
-   // trusts the developer identity (a published CPD, or the local signing
-   // identity). It can be false on an unsigned-CPD identity even though the
-   // signature was generated correctly - so we do not hard-fail on it here.
-   let sig = Security.getXMLSignature( xriFile );
-   console.noteln( format(
-      "<end><cbr><br>* updates.xri signed: developerId=<raw>%s</raw> timestamp=<raw>%s</raw> locallyTrusted=%s",
-      sig.developerId, sig.timestamp, sig.valid ? "yes" : "no" ) );
-   if ( !sig.valid )
-      console.warningln( "** Signature is not locally trusted yet. This is expected until your "
-                       + "CPD identity is approved and published by Pleiades (or a local signing "
-                       + "identity for this license exists)." );
+   // At this point the signature HAS been written. Optionally report local
+   // trust, but never fail on it: getXMLSignature THROWS (not just returns
+   // valid=false) when the developer identity is not recognized on this
+   // machine, which is the normal state until your CPD is approved and
+   // published by Pleiades (or a local signing identity for this license
+   // exists). That is not a signing failure - the signature is valid and
+   // will be trusted everywhere once the CPD is published.
+   let trusted = false;
+   try
+   {
+      let sig = Security.getXMLSignature( xriFile );
+      trusted = sig.valid;
+   }
+   catch ( e )
+   {
+      // Unknown/unapproved identity - expected pre-CPD-approval.
+   }
+   console.noteln( "* updates.xri signed (developerId=" + keys.developerId
+                 + "); locallyTrusted=" + (trusted ? "yes" : "no") );
+   if ( !trusted )
+      console.warningln( "** Signature is not locally trusted yet. This is EXPECTED until your "
+                       + "CPD identity is approved and published by Pleiades." );
    console.flush();
+
+   // Record success so the shell wrapper can distinguish a real signing
+   // from a stale <Signature> left by a previous run.
+   let statusPath = argValue( "status" );
+   if ( statusPath != null )
+      File.writeTextFile( statusPath, "OK developerId=" + keys.developerId
+                        + " locallyTrusted=" + (trusted ? "yes" : "no") + "\n" );
 }
 
-main();
+try
+{
+   main();
+}
+catch ( e )
+{
+   // PixInsight console output and uncaught exceptions do NOT reach the
+   // parent process stdout under -r/--force-exit, which makes headless/CI
+   // failures look silent. Write the reason to the status file (if
+   // provided) so tools/sign-xri.sh can surface it; then re-throw so the
+   // GUI Process Console still shows it.
+   let statusPath = argValue( "status" );
+   if ( statusPath != null )
+   {
+      try { File.writeTextFile( statusPath, "ERROR: " + e.toString() + "\n" ); }
+      catch ( _ ) {}
+   }
+   throw e;
+}
