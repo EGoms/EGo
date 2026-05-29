@@ -1,0 +1,87 @@
+\documentclass PIScriptDoc
+
+\script { OneClickLinearWorkflow }
+
+\keywords { linear processing, narrowband, broadband galaxies, workflow, BlurXTerminator, NoiseXTerminator, StarXTerminator, SPCC }
+
+\author { Evan }
+
+\copyright { 2026, Evan. PCL License 2.0. }
+
+\brief {
+   Runs a sane linear-stage processing chain with separate presets
+   for narrowband nebulae and broadband galaxies.
+}
+
+\description {
+   This script executes a chain of linear-stage processes on the
+   active view, with two presets tuned for the targets the author
+   shoots most: \s{narrowband nebulae} and \s{broadband galaxies}.
+
+   The chain consists of gradient correction, optional plate solve
+   and SPCC for broadband, BlurXTerminator, NoiseXTerminator, and an
+   optional star/starless split with StarXTerminator. Each step is
+   reversible through PixInsight's Undo system and the chain halts
+   on the first failure or cancellation.
+
+   Missing third-party processes (BXT, NXT, SXT, GradientCorrection)
+   are detected at runtime and skipped with a console warning rather
+   than aborting the chain.
+}
+
+\usage {
+   Open the script from \e{Scripts > EGo > One-Click Linear
+   Workflow}. Pick the target type, toggle the steps you want, and
+   click \e{Run}.
+
+   The active image window is the target. The image must be linear;
+   running this on a stretched image will produce poor results.
+
+   \definition {
+      { Target type }
+      { Switches between the narrowband and broadband galaxy presets.
+        Disables plate solve and SPCC checkboxes in narrowband mode. }
+
+      { Gradient correction }
+      { Runs GradientCorrection; falls back to
+        AutomaticBackgroundExtractor if GC is not installed. }
+
+      { Plate solve }
+      { Launches the bundled ImageSolver script. Broadband only. }
+
+      { SPCC }
+      { Opens SpectrophotometricColorCalibration in interactive mode.
+        Broadband only. }
+
+      { BlurXTerminator }
+      { Runs BXT with preset values for the chosen target type. }
+
+      { NoiseXTerminator }
+      { Runs NXT with detail 0.15 and denoise 0.85. }
+
+      { Star split }
+      { Runs StarXTerminator with \c{stars=true} and
+        \c{unscreen=true}, producing both the stars-only and starless
+        siblings of the input. }
+   }
+}
+
+\section { Workflow steps } {
+   \subsection { Narrowband preset } {
+      GradientCorrection -> BlurXTerminator (sharpen_nonstellar 0.85,
+      sharpen_stars 0.20) -> NoiseXTerminator (denoise 0.85) ->
+      optional StarXTerminator split.
+   }
+
+   \subsection { Broadband galaxy preset } {
+      GradientCorrection -> ImageSolver dialog -> SPCC dialog ->
+      BlurXTerminator (sharpen_nonstellar 0.75, sharpen_stars 0.25)
+      -> NoiseXTerminator (denoise 0.85) -> optional StarXTerminator
+      split.
+   }
+}
+
+\relatedscript MaskFactory
+\relatedscript ChannelPreview
+
+\make

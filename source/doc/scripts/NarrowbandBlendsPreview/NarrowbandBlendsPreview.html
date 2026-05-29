@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+   <title>PixInsight Reference Documentation | NarrowbandBlendsPreview</title>
+   <meta name="keywords" content="narrowband, PixelMath, SHO, HOO, Foraxx, PIP, dynamic blend, spatial blend, preview" />
+   <meta name="author" content="Evan" />
+   <meta name="description" content="Live grid preview of every narrowband blend recipe in the EGo catalog: static palettes (Classic Hubble, HOO, Foraxx, ...), dynamic PIP-gated blends, and spatial split blends. Pick a tile, then open it in PixelMath or apply it to the active view." />
+   <meta name="robots" content="INDEX,FOLLOW" />
+   <meta name="generator" content="PixInsight Documentation Compiler script version 1.7.3" />
+   <meta name="pidoc-document-class" content="PIScriptDoc" />
+   <script type="text/javascript" src="../../pidoc/scripts/pidoc-utility.js"></script>
+   <link type="text/css" href="../../pidoc/css/pidoc-common.css" rel="stylesheet" />
+   <link type="text/css" href="../../pidoc/css/pidoc-highlight.css" rel="stylesheet" />
+   <link type="text/css" href="../../pidoc/css/pidoc-tool.css" rel="stylesheet" />
+   <link rel="icon" href="../../pidoc/icons/pidoc-icon.svg" />
+</head>
+<body>
+<script type="text/javascript">
+   pidoc_generateDynamicContents();
+</script>
+
+<h1>NarrowbandBlendsPreview</h1>
+
+<div id="authors">
+<p>By Evan</p>
+</div>
+
+<hr class="separator"/>
+
+<div id="brief">
+<p>Live grid preview of every narrowband blend recipe in the EGo catalog: static palettes (Classic Hubble, HOO, Foraxx, ...), dynamic PIP-gated blends, and spatial split blends. Pick a tile, then open it in PixelMath or apply it to the active view. <a href="#__contents__">[more]</a></p></div>
+
+<div id="keywords">
+<p><strong>Keywords:</strong> narrowband, PixelMath, SHO, HOO, Foraxx, PIP, dynamic blend, spatial blend, preview</p>
+</div>
+
+<h3 class="pidoc_sectionTitle" id="__toc__">Contents</h3>
+<p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'toc', this );">[hide]</p>
+<div id="toc">
+<ul>
+<li class="pidoc_tocItem"><a href="#__Description__">1&emsp;Description</a></li>
+<li class="pidoc_tocItem"><a href="#__Usage__">2&emsp;Usage</a></li>
+<li class="pidoc_tocItem"><a href="#__related_scripts__">Related Scripts</a></li>
+</ul>
+</div>
+
+<div id="__contents__">
+
+<div class="pidoc_section" id="__Description__">
+   <h3 class="pidoc_sectionTitle">1&emsp;Description</h3>
+   <p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'Description', this );">[hide]</p>
+   <div id="Description">
+<p>Each blend is rendered on auto-STF'd downsampled copies of the selected channel views, so you can compare every palette side-by-side at a glance. Click a tile to select; the actions below operate on the selected recipe at full resolution.</p>
+<p>Recipes use single-letter symbols (<span class="pidoc_code">H</span>, <span class="pidoc_code">O</span>, <span class="pidoc_code">S</span>, plus <span class="pidoc_code">L</span>, <span class="pidoc_code">R</span>, <span class="pidoc_code">G</span>, <span class="pidoc_code">B</span> for LRGB-flavored ones) bound to actual view IDs via PixelMath's <em>Symbols</em> field. Re-targeting a saved icon to a different image set is a one-field edit later.</p>
+<p>Dynamic blends use per-pixel gates derived from the channels themselves (e.g. <span class="pidoc_code">gO = O^~O</span>) for smooth maskless transitions between palettes. Spatial blends use <span class="pidoc_code">X()</span> / <span class="pidoc_code">Y()</span> to weight one palette against another across the frame.</p>
+   </div>
+</div>
+
+<div class="pidoc_section" id="__Usage__">
+   <h3 class="pidoc_sectionTitle">2&emsp;Usage</h3>
+   <p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'Usage', this );">[hide]</p>
+   <div id="Usage">
+<p>Open from <em>Scripts &gt; EGo &gt; NB Blends Live Preview</em>. Pick at least Ha and OIII views (and SII / L / R / G / B as needed by individual recipes), click <em>Generate / Refresh Previews</em>, then click a tile and either <em>Open in PixelMath</em> or <em>Apply to Active</em>.</p>
+
+<dl class="pidoc_list">
+<dt>
+<p>Channel image selectors</p>
+</dt>
+<dd>
+<p>ViewLists for H (Ha), O (OIII), S (SII), L, R, G, B. Ha and OIII are required; the others are used only by recipes that reference them.</p>
+</dd>
+<dt>
+<p>Generate / Refresh Previews</p>
+</dt>
+<dd>
+<p>Downsamples the selected channels (longest side capped at 220 px), runs every blend against the downsampled clones, applies a per-channel Auto-STF, and renders each result into its tile. Tiles that need channels you haven't selected show <em>Needs: X,Y</em>.</p>
+</dd>
+<dt>
+<p>Open in PixelMath</p>
+</dt>
+<dd>
+<p>Launches a configured PixelMath dialog at full resolution with the recipe's expressions and symbol bindings already filled in. Drag the PixelMath title bar to the workspace to save the recipe as a process icon.</p>
+</dd>
+<dt>
+<p>Apply to Active</p>
+</dt>
+<dd>
+<p>Runs the selected blend in place on the currently active view. Destructive; use <em>Edit &gt; Undo</em> to revert.</p>
+</dd>
+</dl>
+
+   </div>
+</div>
+
+<div class="pidoc_section" id="__related_scripts__">
+   <h3 class="pidoc_sectionTitle">Related Scripts</h3>
+   <div id="related_scripts">
+<p><a href="../../scripts/NarrowbandBlends/NarrowbandBlends.html" title="../../scripts/NarrowbandBlends/NarrowbandBlends.html">NarrowbandBlends</a>, <a href="../../scripts/ChannelPreview/ChannelPreview.html" title="../../scripts/ChannelPreview/ChannelPreview.html">ChannelPreview</a></p>
+   </div>
+</div>
+
+<hr class="separator"/>
+
+<div id="copyright">
+   <p>Copyright &copy; 2026, Evan. PCL License 2.0.</p>
+</div>
+
+<div id="footer">
+   <p>Generated by the PixInsight Documentation Compiler script version 1.7.3 on 2026-05-27 18:40:20 UTC</p>
+</div>
+<br/>
+<br/>
+
+</div> <!-- contents -->
+
+</body>
+</html>

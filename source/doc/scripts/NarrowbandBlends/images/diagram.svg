@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 320"
+     font-family="Helvetica, Arial, sans-serif" font-size="13">
+   <defs>
+      <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5"
+              markerWidth="6" markerHeight="6" orient="auto">
+         <path d="M0,0 L10,5 L0,10 z" fill="#335"/>
+      </marker>
+      <style>
+         .ch { fill:#cfe8d0; stroke:#2e7d32; stroke-width:1.5; rx:6; ry:6; }
+         .p  { fill:#dcecff; stroke:#1d4f8a; stroke-width:1.5; rx:6; ry:6; }
+         .l  { fill:#ffe2cf; stroke:#a14f12; stroke-width:1.5; rx:6; ry:6; }
+         .hdr { fill:#335; font-weight:bold; }
+         .a  { stroke:#335; stroke-width:1.2; fill:none; marker-end:url(#arr); }
+      </style>
+   </defs>
+
+   <text x="20" y="22" class="hdr">Static narrowband palettes</text>
+
+   <rect x="20" y="60"  width="80" height="32" class="ch"/>
+   <text x="60" y="80"  text-anchor="middle">Ha</text>
+   <rect x="20" y="100" width="80" height="32" class="ch"/>
+   <text x="60" y="120" text-anchor="middle">OIII</text>
+   <rect x="20" y="140" width="80" height="32" class="ch"/>
+   <text x="60" y="160" text-anchor="middle">SII</text>
+   <rect x="20" y="180" width="80" height="32" class="ch"/>
+   <text x="60" y="200" text-anchor="middle">L</text>
+
+   <!-- Palette boxes -->
+   <g>
+      <rect x="180" y="60"  width="180" height="32" class="p"/>
+      <text x="270" y="81"  text-anchor="middle">Classic Hubble (SHO)</text>
+
+      <rect x="180" y="100" width="180" height="32" class="p"/>
+      <text x="270" y="121" text-anchor="middle">HOO bicolor</text>
+
+      <rect x="180" y="140" width="180" height="32" class="p"/>
+      <text x="270" y="161" text-anchor="middle">HSO / OHS / HOS</text>
+
+      <rect x="180" y="180" width="180" height="32" class="p"/>
+      <text x="270" y="201" text-anchor="middle">Foraxx-style PIP mix</text>
+
+      <rect x="180" y="220" width="180" height="32" class="l"/>
+      <text x="270" y="241" text-anchor="middle">Ha-into-LRGB recipes</text>
+   </g>
+
+   <!-- PixelMath dialogs (one per blend) -->
+   <rect x="450" y="100" width="200" height="80" class="p"/>
+   <text x="550" y="130" text-anchor="middle">PixelMath dialog</text>
+   <text x="550" y="148" text-anchor="middle" font-size="11">drag title bar to</text>
+   <text x="550" y="164" text-anchor="middle" font-size="11">workspace to iconize</text>
+
+   <path class="a" d="M100,76  L180,76"/>
+   <path class="a" d="M100,116 L180,116"/>
+   <path class="a" d="M100,156 L180,156"/>
+   <path class="a" d="M100,196 L180,196"/>
+   <path class="a" d="M100,196 L180,236"/>
+   <path class="a" d="M360,76  L450,130"/>
+   <path class="a" d="M360,116 L450,140"/>
+   <path class="a" d="M360,156 L450,150"/>
+   <path class="a" d="M360,196 L450,160"/>
+   <path class="a" d="M360,236 L450,170"/>
+
+   <text x="20" y="295" font-size="11" fill="#666">
+      Each blend launches its own PixelMath; PI's dialog is a singleton,
+      so iconize and re-run for the next one.
+   </text>
+</svg>

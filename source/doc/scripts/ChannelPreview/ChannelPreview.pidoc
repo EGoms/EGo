@@ -1,0 +1,53 @@
+\documentclass PIScriptDoc
+
+\script { ChannelPreview }
+
+\keywords { channel extraction, Lab, HSV, narrowband palette, contact sheet }
+
+\author { Evan }
+
+\copyright { 2026, Evan. PCL License 2.0. }
+
+\brief {
+   Decomposes a color image into every common color space (RGB, L*a*b*,
+   L*c*h*, HSV, HSI, XYZ) in one pass, optionally with inverted variants
+   and a tiled contact sheet.
+}
+
+\description {
+   For each selected color space, the script extracts the three
+   component channels into independent image windows named
+   \c{<sourceId>_<space>_<channel>}. An optional contact sheet renders
+   all produced channels into a single 8-bit RGB image for
+   at-a-glance comparison.
+
+   Useful for picking the cleanest luminance proxy when blending
+   narrowband palettes, or for diagnosing color casts in broadband
+   galaxy work.
+}
+
+\usage {
+   Open from \e{Scripts > EGo > Channel Preview (all spaces)}. Pick
+   the source view (must be a color image), choose color spaces,
+   tweak contact-sheet options, and click \e{Generate}.
+
+   \definition {
+      { Color spaces }
+      { Toggle which color spaces to extract. Defaults: RGB, Lab,
+        HSI. }
+
+      { Also generate inverted channels }
+      { Duplicate each extracted channel and apply \c{PixelMath ~$T}
+        to it. Inverted windows are named with an \c{_inv} suffix. }
+
+      { Contact sheet }
+      { Builds an 8-bit RGB tile-grid image containing downsampled
+        previews of every produced channel. Tile size (long edge in
+        pixels) and column count are configurable. }
+   }
+}
+
+\relatedscript NarrowbandBlends
+\relatedscript NarrowbandBlendsPreview
+
+\make

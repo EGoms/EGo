@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xri version="1.0">
+   <description>
+      <p>
+         EGo PixInsight scripts — a collection of PJSR scripts for
+         narrowband nebula and broadband galaxy processing, including
+         a one-click linear workflow, mask factory, channel preview,
+         narrowband blend generators, gradient and stretch comparison
+         tools.
+      </p>
+      <p>
+         All scripts target the PixInsight 1.9.4 (Lockhart) V8 runtime
+         and appear under Scripts &gt; EGo in the menu.
+      </p>
+      <p>
+         Source and issue tracker:
+         https://github.com/&lt;EGoms&gt;/&lt;EGo&gt;
+      </p>
+   </description>
+   <platform os="all" arch="noarch" version="1.9.4:1.9.9999">
+      <package fileName="packages/ego-scripts-20260528.tar.gz" sha1="71496795c8515aeb5a23bab46edb55ada1398ae2" type="script" releaseDate="20260528">
+         <title>
+            EGo PJSR Scripts - 2026-05-28
+         </title>
+         <description>
+            <p>
+               Installs the following scripts under Scripts &gt; EGo:
+            </p>
+            <p>
+               - One-Click Linear Workflow<br/>
+               - Mask Factory<br/>
+               - Channel Preview (all spaces)<br/>
+               - Narrowband Blend Icon Factory<br/>
+               - NB Blends Live Preview<br/>
+               - Multi Gradient Comparison<br/>
+               - Stretch Comparison
+            </p>
+            <p>
+               Documentation is shipped in a separate doc package,
+               also part of this repository. Requires PixInsight 1.9.4
+               Lockhart or later (V8 runtime).
+            </p>
+         </description>
+      </package>
+      <package fileName="packages/ego-doc-20260528.tar.gz" sha1="1bbc9a9b957605e82985a8a6fa7388e079400716" type="doc" releaseDate="20260528">
+         <title>
+            EGo PJSR Documentation - 2026-05-28
+         </title>
+         <description>
+            <p>
+               Reference documentation for the EGo PJSR scripts.
+               Installs HTML pages under doc/scripts/&lt;feature-id&gt;/
+               so the in-dialog help icon and Process Explorer can
+               find them.
+            </p>
+         </description>
+      </package>
+   </platform>
+</xri>

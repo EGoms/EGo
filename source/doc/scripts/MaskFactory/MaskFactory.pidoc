@@ -1,0 +1,65 @@
+\documentclass PIScriptDoc
+
+\script { MaskFactory }
+
+\keywords { masks, luminance mask, star mask, range mask, high-pass, narrowband }
+
+\author { Evan }
+
+\copyright { 2026, Evan. PCL License 2.0. }
+
+\brief {
+   One-pass generator for the masks most often needed when processing
+   narrowband nebulae and broadband galaxies.
+}
+
+\description {
+   This script produces a selectable set of masks against the active
+   view: luminance (plus inverted and stretched variants), range masks
+   biased to highlights or shadows, star masks (with and without
+   inversion), a nebula-only mask built from a starless rendition, and
+   a high-pass mask for sharpening localization.
+
+   Each mask is created as a fresh image window named
+   \c{<source>_<maskKind>} so that multiple masks coexist for
+   comparison.
+}
+
+\usage {
+   Open from \e{Scripts > EGo > Mask Factory}. Pick the source view,
+   check the masks to generate, optionally adjust the high-pass radius,
+   and click \e{Generate}.
+
+   \definition {
+      { Source view }
+      { Any view, mono or color. The ViewList defaults to the active
+        view. }
+
+      { Luminance variants }
+      { Plain luminance, inverted luminance, and stretched luminance
+        (a mid-tones transfer with m = 0.15 for a strong shadow lift). }
+
+      { Range masks (highlights / shadows) }
+      { RangeSelection with smoothness 4 from 0.5 to 1.0 for the
+        highlights mask, and from 0.0 to 0.2 for the shadows mask. }
+
+      { Star mask and inverted star mask }
+      { StarXTerminator produces a starless rendition; the difference
+        (boosted with mtf 0.25) becomes the star mask. The inverted
+        variant flips it in place. Falls back to the built-in StarMask
+        if StarXT is unavailable. }
+
+      { Nebula-only mask }
+      { Luminance of the starless rendition, optionally stretched.
+        Requires StarXTerminator. }
+
+      { High-pass mask }
+      { 0.5 + (image \- gaussian-blurred image). The gaussian sigma is
+        derived from the chosen radius (FWHM / 2.355). }
+   }
+}
+
+\relatedscript OneClickLinearWorkflow
+\relatedscript ChannelPreview
+
+\make

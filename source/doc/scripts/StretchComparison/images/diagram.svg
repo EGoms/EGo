@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300"
+     font-family="Helvetica, Arial, sans-serif" font-size="13">
+   <defs>
+      <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5"
+              markerWidth="6" markerHeight="6" orient="auto">
+         <path d="M0,0 L10,5 L0,10 z" fill="#335"/>
+      </marker>
+      <style>
+         .src  { fill:#cfe8d0; stroke:#2e7d32; stroke-width:1.5; rx:6; ry:6; }
+         .m    { fill:#dcecff; stroke:#1d4f8a; stroke-width:1.5; rx:6; ry:6; }
+         .out  { fill:#fff; stroke:#666; stroke-width:1; rx:4; ry:4; }
+         .hdr  { fill:#335; font-weight:bold; }
+         .a    { stroke:#335; stroke-width:1.2; fill:none; marker-end:url(#arr); }
+      </style>
+   </defs>
+
+   <text x="20" y="22" class="hdr">One source, N stretched siblings</text>
+
+   <rect x="20" y="120" width="120" height="46" class="src"/>
+   <text x="80" y="144" text-anchor="middle">Source view</text>
+   <text x="80" y="160" text-anchor="middle" font-size="11">(linear, untouched)</text>
+
+   <g>
+      <rect x="200"  y="40"  width="180" height="32" class="m"/>
+      <text x="290"  y="61"  text-anchor="middle">Auto-STF (baked HT)</text>
+      <rect x="200"  y="84"  width="180" height="32" class="m"/>
+      <text x="290"  y="105" text-anchor="middle">MaskedStretch</text>
+      <rect x="200"  y="128" width="180" height="32" class="m"/>
+      <text x="290"  y="149" text-anchor="middle">ArcsinhStretch</text>
+      <rect x="200"  y="172" width="180" height="32" class="m"/>
+      <text x="290"  y="193" text-anchor="middle">GHS</text>
+      <rect x="200"  y="216" width="180" height="32" class="m"/>
+      <text x="290"  y="237" text-anchor="middle">AdaptiveStretch</text>
+   </g>
+
+   <g>
+      <rect x="450" y="40"  width="200" height="32" class="out"/>
+      <text x="550" y="61"  text-anchor="middle" font-size="11">&lt;id&gt;_STF</text>
+      <rect x="450" y="84"  width="200" height="32" class="out"/>
+      <text x="550" y="105" text-anchor="middle" font-size="11">&lt;id&gt;_MS</text>
+      <rect x="450" y="128" width="200" height="32" class="out"/>
+      <text x="550" y="149" text-anchor="middle" font-size="11">&lt;id&gt;_AS</text>
+      <rect x="450" y="172" width="200" height="32" class="out"/>
+      <text x="550" y="193" text-anchor="middle" font-size="11">&lt;id&gt;_GHS</text>
+      <rect x="450" y="216" width="200" height="32" class="out"/>
+      <text x="550" y="237" text-anchor="middle" font-size="11">&lt;id&gt;_AdS</text>
+   </g>
+
+   <path class="a" d="M140,138 L200,56"/>
+   <path class="a" d="M140,140 L200,100"/>
+   <path class="a" d="M140,143 L200,144"/>
+   <path class="a" d="M140,146 L200,188"/>
+   <path class="a" d="M140,149 L200,232"/>
+
+   <path class="a" d="M380,56  L450,56"/>
+   <path class="a" d="M380,100 L450,100"/>
+   <path class="a" d="M380,144 L450,144"/>
+   <path class="a" d="M380,188 L450,188"/>
+   <path class="a" d="M380,232 L450,232"/>
+
+   <text x="20" y="285" font-size="11" fill="#666">
+      Each method runs on its own clone. Output windows stay open in
+      PixInsight; nothing is written to disk.
+   </text>
+</svg>

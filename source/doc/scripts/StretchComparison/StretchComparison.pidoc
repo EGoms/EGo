@@ -1,0 +1,45 @@
+\documentclass PIScriptDoc
+
+\script { StretchComparison }
+
+\keywords { stretch, STF, MaskedStretch, ArcsinhStretch, GHS, AdaptiveStretch }
+
+\author { Evan }
+
+\copyright { 2026, Evan. PCL License 2.0. }
+
+\brief {
+   Clones the target image once per enabled stretch method and
+   applies each to a separate clone for side-by-side comparison.
+}
+
+\description {
+   Methods covered: Auto-STF baked into HistogramTransformation,
+   MaskedStretch, ArcsinhStretch, GeneralizedHyperbolicStretch, and
+   AdaptiveStretch. The original is never modified; output windows
+   are suffixed with the method tag (\c{_STF}, \c{_MS}, \c{_AS},
+   \c{_GHS}, \c{_AdS}) and remain open in PixInsight.
+
+   Per-method tuning constants live at the top of the script source
+   \- edit them to match your preferred defaults.
+}
+
+\usage {
+   Open from \e{Scripts > EGo > Stretch Comparison}. Choose the
+   source view, enable the methods you want to compare, and click
+   \e{Run}.
+
+   \definition {
+      { Source view }
+      { Any mono or color view. Must be linear. }
+
+      { Method toggles }
+      { Independent on/off for STF, MaskedStretch, ArcsinhStretch,
+        GHS, and AdaptiveStretch. }
+   }
+}
+
+\relatedscript CustomGradientCorrect
+\relatedscript OneClickLinearWorkflow
+
+\make

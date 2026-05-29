@@ -1,0 +1,53 @@
+\documentclass PIScriptDoc
+
+\script { CustomGradientCorrect }
+
+\keywords { gradient correction, SPFC, MGC, ABE, GradientCorrection, comparison }
+
+\author { Evan }
+
+\copyright { 2026, Evan. PCL License 2.0. }
+
+\brief {
+   Runs SpectrophotometricFluxCalibration followed by
+   GradientCorrection, MultiscaleGradientCorrection, and
+   AutomaticBackgroundExtractor on independent clones of the source,
+   producing six output windows so you can pick the best correction.
+}
+
+\description {
+   For mono images, the filter is auto-detected from the FITS
+   \c{FILTER} keyword. For color images, the palette is parsed from
+   the image name (SHO, HOO, HSO, OHS, HOS, LRGB, RGB); if none is
+   detected, the dropdown lets you pick one.
+
+   SPFC uses the chosen telescope setup's sensor QE curve and filter
+   parameters. The telescope setup table, broadband filter brand
+   curves, and narrowband bandwidth values are defined near the top
+   of the script source for easy customization.
+}
+
+\usage {
+   Open from \e{Scripts > EGo > Multi Gradient Comparison}. Select
+   the source view and telescope setup, override the palette only
+   if auto-detection failed, and click \e{Run}.
+
+   \definition {
+      { Source view }
+      { Any mono or color view. The original is cloned; the source
+        itself is never modified. }
+
+      { Telescope setup }
+      { Identifies the sensor QE curve and the broadband filter brand
+        or narrowband bandpass set used during acquisition. }
+
+      { Palette override (color only) }
+      { SHO, HOO, HSO, OHS, HOS, LRGB, or RGB. Auto-detected from the
+        image name when possible. }
+   }
+}
+
+\relatedscript StretchComparison
+\relatedscript OneClickLinearWorkflow
+
+\make

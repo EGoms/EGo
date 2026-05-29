@@ -1,0 +1,40 @@
+## OS
+.DS_Store
+Thumbs.db
+
+## Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+## Python
+__pycache__/
+*.pyc
+.venv/
+
+## Local builds — packages/ IS committed (PixInsight needs to fetch
+## them via raw URL), so do NOT ignore packages/.
+## But ignore any incidental tarballs left at the repo root.
+/*.tar.gz
+/*.zip
+
+## Claude / IDE scratch
+.claude/
+
+## PIDoc shared bundle - locally bootstrapped CSS/JS/icons that the
+## per-script HTML references via ../../pidoc/... PixInsight already
+## ships an identical bundle at /Applications/PixInsight/doc/pidoc/,
+## so we neither commit nor ship it. The compiler regenerates it on
+## demand if missing.
+/source/doc/pidoc/
+
+## Signing keys - NEVER commit these. The .xssk file contains your
+## encrypted private signing key; if it leaks together with the
+## password, someone can forge signatures under your identity.
+*.xssk
+
+## .xsgn signature sidecars SHOULD be committed - they're the public
+## proof that a specific .js was signed by you. This rule un-ignores
+## them in case a broader pattern above matches.
+!*.xsgn

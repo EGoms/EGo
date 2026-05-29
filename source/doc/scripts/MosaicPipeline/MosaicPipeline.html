@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+   <title>PixInsight Reference Documentation | MosaicPipeline</title>
+   <meta name="keywords" content="mosaic, MosaicByCoordinates, GradientMergeMosaic, PhotometricMosaic, astrometric mosaic, image registration" />
+   <meta name="author" content="Evan" />
+   <meta name="description" content="Two-phase astrometric mosaic pipeline: registers tiles with MosaicByCoordinates, then merges them with either GradientMergeMosaic (process) or the Mosaic-submenu scripts." />
+   <meta name="robots" content="INDEX,FOLLOW" />
+   <meta name="generator" content="PixInsight Documentation Compiler script version 1.7.3" />
+   <meta name="pidoc-document-class" content="PIScriptDoc" />
+   <script type="text/javascript" src="../../pidoc/scripts/pidoc-utility.js"></script>
+   <link type="text/css" href="../../pidoc/css/pidoc-common.css" rel="stylesheet" />
+   <link type="text/css" href="../../pidoc/css/pidoc-highlight.css" rel="stylesheet" />
+   <link type="text/css" href="../../pidoc/css/pidoc-tool.css" rel="stylesheet" />
+   <link rel="icon" href="../../pidoc/icons/pidoc-icon.svg" />
+</head>
+<body>
+<script type="text/javascript">
+   pidoc_generateDynamicContents();
+</script>
+
+<h1>MosaicPipeline</h1>
+
+<div id="authors">
+<p>By Evan</p>
+</div>
+
+<hr class="separator"/>
+
+<div id="brief">
+<p>Two-phase astrometric mosaic pipeline: registers tiles with MosaicByCoordinates, then merges them with either GradientMergeMosaic (process) or the Mosaic-submenu scripts. <a href="#__contents__">[more]</a></p></div>
+
+<div id="keywords">
+<p><strong>Keywords:</strong> mosaic, MosaicByCoordinates, GradientMergeMosaic, PhotometricMosaic, astrometric mosaic, image registration</p>
+</div>
+
+<h3 class="pidoc_sectionTitle" id="__toc__">Contents</h3>
+<p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'toc', this );">[hide]</p>
+<div id="toc">
+<ul>
+<li class="pidoc_tocItem"><a href="#__Description__">1&emsp;Description</a></li>
+<li class="pidoc_tocItem"><a href="#__Usage__">2&emsp;Usage</a></li>
+<li class="pidoc_tocItem"><a href="#__Pipeline_stages__">3&emsp;Pipeline stages</a>
+<ul>
+<li class="pidoc_tocSubitem"><a href="#__Pipeline_stages_:_Phase_1:_registration__">3.1&emsp;Phase 1: registration</a></li>
+<li class="pidoc_tocSubitem"><a href="#__Pipeline_stages_:_Phase_2A:_GradientMergeMosaic__">3.2&emsp;Phase 2A: GradientMergeMosaic</a></li>
+<li class="pidoc_tocSubitem"><a href="#__Pipeline_stages_:_Phase_2B:_Mosaic_scripts__">3.3&emsp;Phase 2B: Mosaic scripts (deferred)</a></li>
+</ul>
+</li>
+<li class="pidoc_tocItem"><a href="#__Notes__">4&emsp;Notes</a>
+<ul>
+<li class="pidoc_tocSubitem"><a href="#__Notes_:_Plate_solutions__">4.1&emsp;Plate solutions</a></li>
+<li class="pidoc_tocSubitem"><a href="#__Notes_:_Linear_vs_nonlinear_input__">4.2&emsp;Linear vs nonlinear input</a></li>
+<li class="pidoc_tocSubitem"><a href="#__Notes_:_Parameter-passing_fragility__">4.3&emsp;Parameter-passing fragility</a></li>
+</ul>
+</li>
+<li class="pidoc_tocItem"><a href="#__related_scripts__">Related Scripts</a></li>
+<li class="pidoc_tocItem"><a href="#__references__">References</a></li>
+</ul>
+</div>
+
+<div id="__contents__">
+
+<div class="pidoc_section" id="__Description__">
+   <h3 class="pidoc_sectionTitle">1&emsp;Description</h3>
+   <p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'Description', this );">[hide]</p>
+   <div id="Description">
+<p>Builds a seamless mosaic from a set of plate-solved input tiles. The pipeline runs in two phases.</p>
+<p><strong>Phase 1 - Registration.</strong> Every input tile is reprojected onto a common astrometric frame using <a href="../MosaicByCoordinates/MosaicByCoordinates.html" title="../MosaicByCoordinates/MosaicByCoordinates.html">MosaicByCoordinates</a>. The script pre-fills the input list, output directory, suffix, and overwrite flag, then launches MosaicByCoordinates so its dialog opens with everything in place. Confirm the projection and mosaic dimensions and click <em>OK</em>. MosaicByCoordinates writes one <span class="pidoc_code">&lt;name&gt;&lt;suffix&gt;.xisf</span> per tile into the chosen output directory.</p>
+<p><strong>Phase 2A - GradientMergeMosaic.</strong> On the <em>Process</em> path, the registered tiles are fed to <a href="../../tools/GradientMergeMosaic/GradientMergeMosaic.html" title="../../tools/GradientMergeMosaic/GradientMergeMosaic.html">GradientMergeMosaic</a>, which merges them in the gradient domain to eliminate seams. This is the recommended path - the process runs natively on the V8 runtime and works today.</p>
+<p><strong>Phase 2B - Mosaic scripts.</strong> On the <em>Scripts</em> path, the registered tiles are opened as windows and the script tries to launch <span class="pidoc_code">TrimMosaicTile</span> (optional) and <span class="pidoc_code">PhotometricMosaic</span> via <span class="pidoc_code">Process.executeScriptGlobal</span>. These scripts are still on the SpiderMonkey runtime as of PixInsight 1.9.4 and will fail to load; the pipeline will report the error and stop. This mode is wired up so it will work transparently as soon as those scripts are ported to V8 - no changes to the pipeline needed.</p>
+<p>Both modes require MosaicByCoordinates in Phase 1; it is the only tile-registration step the pipeline performs.</p>
+   </div>
+</div>
+
+<div class="pidoc_section" id="__Usage__">
+   <h3 class="pidoc_sectionTitle">2&emsp;Usage</h3>
+   <p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'Usage', this );">[hide]</p>
+   <div id="Usage">
+<p>Open the script from <em>Scripts &gt; EGo &gt; Mosaic Pipeline</em>. Each input tile must already have a valid astrometric solution (ImageSolver, or solver-equipped acquisition software). Tiles that are not plate-solved will be rejected by MosaicByCoordinates in Phase 1.</p>
+
+<dl class="pidoc_list">
+<dt>
+<p>Input tiles</p>
+</dt>
+<dd>
+<p>File list of source tiles. Use <em>Add Files...</em> to pick FITS/XISF images; <em>Remove</em> drops selected entries; <em>Clear</em> empties the list. At least two tiles are required.</p>
+</dd>
+<dt>
+<p>Output directory</p>
+</dt>
+<dd>
+<p>Where MosaicByCoordinates writes the registered tiles. Must exist. The same directory is read back in Phase 2 to locate the merge inputs, so any external change to file names between phases will break the pipeline.</p>
+</dd>
+<dt>
+<p>Registered suffix</p>
+</dt>
+<dd>
+<p>Suffix appended to each registered tile's basename. Defaults to <span class="pidoc_code">_ra</span> to match MosaicByCoordinates' own default.</p>
+</dd>
+<dt>
+<p>Overwrite existing</p>
+</dt>
+<dd>
+<p>Forwarded to MosaicByCoordinates; if off and a registered file already exists, MBC will abort.</p>
+</dd>
+<dt>
+<p>GradientMergeMosaic mode</p>
+</dt>
+<dd>
+<p>Runs the GMM process on the registered tiles. <em>Average overlap</em> maps to GMM's Average combination type (better SNR on overlapping regions, order-independent); unchecking it selects Overlay. <em>Shrink</em> removes border pixels affected by interpolation aliasing - the default of 1 is right for most tiles. <em>Feather</em> controls the seam transition radius in pixels.</p>
+</dd>
+<dt>
+<p>Scripts &gt; Mosaic mode</p>
+</dt>
+<dd>
+<p>Opens the registered tiles as windows and attempts to launch <span class="pidoc_code">TrimMosaicTile</span> (if checked) and <span class="pidoc_code">PhotometricMosaic</span> (if checked). Currently warns up front - the underlying scripts do not yet run on the V8 runtime.</p>
+</dd>
+</dl>
+
+   </div>
+</div>
+
+<div class="pidoc_section" id="__Pipeline_stages__">
+   <h3 class="pidoc_sectionTitle">3&emsp;Pipeline stages</h3>
+   <p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'Pipeline_stages', this );">[hide]</p>
+   <div id="Pipeline_stages">
+<div class="pidoc_subsection" id="__Pipeline_stages_:_Phase_1:_registration__">
+   <h4 class="pidoc_subsectionTitle">3.1&emsp;Phase 1: registration</h4>
+<p>Pre-fills <span class="pidoc_code">engine_*</span> parameters (the keys <span class="pidoc_code">PersistentObject.LoadParameters</span> consumes for <span class="pidoc_code">MosaicByCoordinatesEngine</span>, whose prefix is <span class="pidoc_code">"engine"</span>), then calls <span class="pidoc_code">Process.executeScriptGlobal("MosaicByCoordinates/MosaicByCoordinates")</span>. After MBC returns, the script computes the expected output paths (<span class="pidoc_code">&lt;outputDir&gt;/&lt;basename&gt;&lt;suffix&gt;.xisf</span>) and aborts if any are missing.</p>
+</div>
+
+<div class="pidoc_subsection" id="__Pipeline_stages_:_Phase_2A:_GradientMergeMosaic__">
+   <h4 class="pidoc_subsectionTitle">3.2&emsp;Phase 2A: GradientMergeMosaic</h4>
+<p>Builds <span class="pidoc_code">targetFrames</span> as <span class="pidoc_code">[[true, path], ...]</span> and runs the GMM process with the user-selected combination type, shrink, and feather. The merged mosaic is left as an open window for further linear processing.</p>
+</div>
+
+<div class="pidoc_subsection" id="__Pipeline_stages_:_Phase_2B:_Mosaic_scripts__">
+   <h4 class="pidoc_subsectionTitle">3.3&emsp;Phase 2B: Mosaic scripts (deferred)</h4>
+<p>Opens each registered tile as a window. Attempts to launch <span class="pidoc_code">JohnMurphy/PhotometricMosaic/TrimMosaicTile</span> and <span class="pidoc_code">JohnMurphy/PhotometricMosaic/PhotometricMosaic</span> via <span class="pidoc_code">Process.executeScriptGlobal</span>, wrapped in try/catch. On failure (the expected outcome today) it logs a clear note that the script is still on SpiderMonkey and continues with the next one if any.</p>
+</div>
+
+   </div>
+</div>
+
+<div class="pidoc_section" id="__Notes__">
+   <h3 class="pidoc_sectionTitle">4&emsp;Notes</h3>
+   <p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'Notes', this );">[hide]</p>
+   <div id="Notes">
+<div class="pidoc_subsection" id="__Notes_:_Plate_solutions__">
+   <h4 class="pidoc_subsectionTitle">4.1&emsp;Plate solutions</h4>
+<p>Every input tile must carry a usable astrometric solution. Phase 1 fails fast if a tile lacks one - solve missing tiles with <span class="pidoc_code">ImageSolver</span> (Scripts &gt; Image Analysis) and re-run.</p>
+</div>
+
+<div class="pidoc_subsection" id="__Notes_:_Linear_vs_nonlinear_input__">
+   <h4 class="pidoc_subsectionTitle">4.2&emsp;Linear vs nonlinear input</h4>
+<p>Both merge backends accept linear or nonlinear data and preserve linearity where applicable, but mixing linear and nonlinear tiles in the same run will produce visible brightness mismatches that no merge can hide. Keep tiles in the same processing state.</p>
+</div>
+
+<div class="pidoc_subsection" id="__Notes_:_Parameter-passing_fragility__">
+   <h4 class="pidoc_subsectionTitle">4.3&emsp;Parameter-passing fragility</h4>
+<p>Phase 1 relies on MosaicByCoordinatesEngine keeping its <span class="pidoc_code">"engine"</span> PersistentObject prefix. If a future MosaicByCoordinates version changes that prefix, the pre-fill will silently no-op and the MBC dialog will open empty. The pipeline will still run if the user populates MBC manually, but the output-path check at the end of Phase 1 will fail unless the chosen suffix and output dir match what was passed to this script.</p>
+</div>
+
+   </div>
+</div>
+
+<div class="pidoc_section" id="__related_scripts__">
+   <h3 class="pidoc_sectionTitle">Related Scripts</h3>
+   <div id="related_scripts">
+<p><a href="../../scripts/OneClickLinearWorkflow/OneClickLinearWorkflow.html" title="../../scripts/OneClickLinearWorkflow/OneClickLinearWorkflow.html">OneClickLinearWorkflow</a>, <a href="../../scripts/MaskFactory/MaskFactory.html" title="../../scripts/MaskFactory/MaskFactory.html">MaskFactory</a></p>
+   </div>
+</div>
+
+<div class="pidoc_section" id="__references__">
+   <h3 class="pidoc_sectionTitle">References</h3>
+   <div id="references">
+<ol>
+<li>Andres del Pozo and Juan Conejero, <em>MosaicByCoordinates script</em>, PixInsight reference documentation.</li>
+<li><em>GradientMergeMosaic process</em>, PixInsight reference documentation.</li>
+<li>John Murphy, <em>PhotometricMosaic script</em>, https://astroprocessing.com/</li>
+</ol>
+   </div>
+</div>
+
+<hr class="separator"/>
+
+<div id="copyright">
+   <p>Copyright &copy; 2026, Evan. PCL License 2.0.</p>
+</div>
+
+<div id="footer">
+   <p>Generated by the PixInsight Documentation Compiler script version 1.7.3 on 2026-05-27 18:40:20 UTC</p>
+</div>
+<br/>
+<br/>
+
+</div> <!-- contents -->
+
+</body>
+</html>

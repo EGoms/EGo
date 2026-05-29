@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+   <title>PixInsight Reference Documentation | MaskFactory</title>
+   <meta name="keywords" content="masks, luminance mask, star mask, range mask, high-pass, narrowband" />
+   <meta name="author" content="Evan" />
+   <meta name="description" content="One-pass generator for the masks most often needed when processing narrowband nebulae and broadband galaxies." />
+   <meta name="robots" content="INDEX,FOLLOW" />
+   <meta name="generator" content="PixInsight Documentation Compiler script version 1.7.3" />
+   <meta name="pidoc-document-class" content="PIScriptDoc" />
+   <script type="text/javascript" src="../../pidoc/scripts/pidoc-utility.js"></script>
+   <link type="text/css" href="../../pidoc/css/pidoc-common.css" rel="stylesheet" />
+   <link type="text/css" href="../../pidoc/css/pidoc-highlight.css" rel="stylesheet" />
+   <link type="text/css" href="../../pidoc/css/pidoc-tool.css" rel="stylesheet" />
+   <link rel="icon" href="../../pidoc/icons/pidoc-icon.svg" />
+</head>
+<body>
+<script type="text/javascript">
+   pidoc_generateDynamicContents();
+</script>
+
+<h1>MaskFactory</h1>
+
+<div id="authors">
+<p>By Evan</p>
+</div>
+
+<hr class="separator"/>
+
+<div id="brief">
+<p>One-pass generator for the masks most often needed when processing narrowband nebulae and broadband galaxies. <a href="#__contents__">[more]</a></p></div>
+
+<div id="keywords">
+<p><strong>Keywords:</strong> masks, luminance mask, star mask, range mask, high-pass, narrowband</p>
+</div>
+
+<h3 class="pidoc_sectionTitle" id="__toc__">Contents</h3>
+<p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'toc', this );">[hide]</p>
+<div id="toc">
+<ul>
+<li class="pidoc_tocItem"><a href="#__Description__">1&emsp;Description</a></li>
+<li class="pidoc_tocItem"><a href="#__Usage__">2&emsp;Usage</a></li>
+<li class="pidoc_tocItem"><a href="#__related_scripts__">Related Scripts</a></li>
+</ul>
+</div>
+
+<div id="__contents__">
+
+<div class="pidoc_section" id="__Description__">
+   <h3 class="pidoc_sectionTitle">1&emsp;Description</h3>
+   <p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'Description', this );">[hide]</p>
+   <div id="Description">
+<p>This script produces a selectable set of masks against the active view: luminance (plus inverted and stretched variants), range masks biased to highlights or shadows, star masks (with and without inversion), a nebula-only mask built from a starless rendition, and a high-pass mask for sharpening localization.</p>
+<p>Each mask is created as a fresh image window named <span class="pidoc_code">&lt;source&gt;_&lt;maskKind&gt;</span> so that multiple masks coexist for comparison.</p>
+   </div>
+</div>
+
+<div class="pidoc_section" id="__Usage__">
+   <h3 class="pidoc_sectionTitle">2&emsp;Usage</h3>
+   <p class="pidoc_sectionToggleButton" onclick="pidoc_toggleSection( 'Usage', this );">[hide]</p>
+   <div id="Usage">
+<p>Open from <em>Scripts &gt; EGo &gt; Mask Factory</em>. Pick the source view, check the masks to generate, optionally adjust the high-pass radius, and click <em>Generate</em>.</p>
+
+<dl class="pidoc_list">
+<dt>
+<p>Source view</p>
+</dt>
+<dd>
+<p>Any view, mono or color. The ViewList defaults to the active view.</p>
+</dd>
+<dt>
+<p>Luminance variants</p>
+</dt>
+<dd>
+<p>Plain luminance, inverted luminance, and stretched luminance (a mid-tones transfer with m = 0.15 for a strong shadow lift).</p>
+</dd>
+<dt>
+<p>Range masks (highlights / shadows)</p>
+</dt>
+<dd>
+<p>RangeSelection with smoothness 4 from 0.5 to 1.0 for the highlights mask, and from 0.0 to 0.2 for the shadows mask.</p>
+</dd>
+<dt>
+<p>Star mask and inverted star mask</p>
+</dt>
+<dd>
+<p>StarXTerminator produces a starless rendition; the difference (boosted with mtf 0.25) becomes the star mask. The inverted variant flips it in place. Falls back to the built-in StarMask if StarXT is unavailable.</p>
+</dd>
+<dt>
+<p>Nebula-only mask</p>
+</dt>
+<dd>
+<p>Luminance of the starless rendition, optionally stretched. Requires StarXTerminator.</p>
+</dd>
+<dt>
+<p>High-pass mask</p>
+</dt>
+<dd>
+<p>0.5 + (image - gaussian-blurred image). The gaussian sigma is derived from the chosen radius (FWHM / 2.355).</p>
+</dd>
+</dl>
+
+   </div>
+</div>
+
+<div class="pidoc_section" id="__related_scripts__">
+   <h3 class="pidoc_sectionTitle">Related Scripts</h3>
+   <div id="related_scripts">
+<p><a href="../../scripts/OneClickLinearWorkflow/OneClickLinearWorkflow.html" title="../../scripts/OneClickLinearWorkflow/OneClickLinearWorkflow.html">OneClickLinearWorkflow</a>, <a href="../../scripts/ChannelPreview/ChannelPreview.html" title="../../scripts/ChannelPreview/ChannelPreview.html">ChannelPreview</a></p>
+   </div>
+</div>
+
+<hr class="separator"/>
+
+<div id="copyright">
+   <p>Copyright &copy; 2026, Evan. PCL License 2.0.</p>
+</div>
+
+<div id="footer">
+   <p>Generated by the PixInsight Documentation Compiler script version 1.7.3 on 2026-05-27 18:40:20 UTC</p>
+</div>
+<br/>
+<br/>
+
+</div> <!-- contents -->
+
+</body>
+</html>

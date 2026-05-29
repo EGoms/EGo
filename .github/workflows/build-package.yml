@@ -1,0 +1,62 @@
+name: Build PixInsight update package
+
+# Rebuilds the tarball + updates.xri whenever source/ changes on main or
+# sandbox, then commits the artifacts back to the same branch. The
+# [skip ci] tag on the auto-commit prevents an infinite loop.
+
+on:
+   push:
+      branches: [main, sandbox]
+      paths:
+         - 'source/**'
+         - 'tools/build-package.sh'
+         - 'tools/update_xri.py'
+         - '.github/workflows/build-package.yml'
+   workflow_dispatch: {}
+
+permissions:
+   contents: write
+
+concurrency:
+   group: build-package-${{ github.ref }}
+   cancel-in-progress: true
+
+jobs:
+   build:
+      runs-on: ubuntu-latest
+      steps:
+         - name: Checkout
+           uses: actions/checkout@v4
+           with:
+              # Need full history so we can push the commit back.
+              fetch-depth: 0
+              # Use the default GITHUB_TOKEN for push access.
+              persist-credentials: true
+
+         - name: Set up Python
+           uses: actions/setup-python@v5
+           with:
+              python-version: '3.x'
+
+         - name: Build package
+           id: build
+           run: |
+              chmod +x tools/build-package.sh
+              tools/build-package.sh
+              # Capture the resulting filename for the commit message.
+              PKG=$(ls packages/ego-scripts-*.tar.gz | head -n1)
+              echo "pkg=$PKG" >> "$GITHUB_OUTPUT"
+
+         - name: Commit artifacts
+           env:
+              PKG: ${{ steps.build.outputs.pkg }}
+           run: |
+              git config user.name  "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git add packages/ updates.xri
+              if git diff --staged --quiet; then
+                 echo "no changes to commit"
+                 exit 0
+              fi
+              git commit -m "build: ${PKG} [skip ci]"
+              git push origin HEAD:${GITHUB_REF#refs/heads/}
