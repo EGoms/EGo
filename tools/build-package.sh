@@ -17,24 +17,23 @@
 #
 # Code signing
 # ------------
-# This script does NOT sign anything. PixInsight's CodeSign tool only
-# runs inside PixInsight itself (Security.generateCodeSignatureFile is
-# a PJSR call), so signing can't happen in headless CI. The current
-# stance: ship unsigned until our CPD is approved + published by
-# Pleiades. Until then, signed .xsgn/.xri files cause hard "Unknown
-# code signing identity" failures on every machine that fetches the
-# repo - including the developer's own, when going through the remote-
-# repository fetch path.
+# This script does NOT sign anything - it only packs and rewrites
+# updates.xri. PixInsight's CodeSign tool only runs inside PixInsight
+# itself (the Security PJSR object), so it lives in separate steps:
+#   tools/codesign.sh   sign .js  -> .xsgn  (must run BEFORE this script,
+#                       so the .xsgn files are captured in the tarball)
+#   tools/sign-xri.sh   sign updates.xri    (must run AFTER this script,
+#                       because the .xri signature covers the SHA-1 values
+#                       this script writes - any later edit strips it)
 #
-# Once the CPD is approved, the manual signed-release flow is:
-#   1. Edit .js sources under source/src/scripts/EGo/
-#   2. PixInsight > Script > CodeSign on each modified .js
-#      (generates a sibling .xsgn sidecar)
-#   3. Run this script locally (packs source/src with the .xsgn files,
-#      rewrites updates.xri with the new SHA-1)
-#   4. Commit and push
-# Do NOT sign updates.xri while the auto-rebuild CI workflow is on -
-# CI will rewrite it on the next push and strip the signature.
+# Use tools/release.sh to run all three in the correct order locally, or
+# the self-hosted GitHub Actions workflow (.github/workflows/release.yml)
+# to do it on push. Do not re-run this script alone after signing the
+# .xri without re-signing it - rewriting updates.xri strips the signature.
+#
+# Note: repository/script signatures are only TRUSTED on other machines
+# once your CPD identity is approved and published by Pleiades. Until then
+# they verify only where your license/local signing identity exists.
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"

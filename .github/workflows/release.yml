@@ -1,0 +1,112 @@
+name: Build & sign EGo release
+
+# Builds a complete, SIGNED release on a SELF-HOSTED macOS runner that has
+# PixInsight installed and your signing keys present, then commits the
+# artifacts back to the branch.
+#
+# Why self-hosted: PixInsight code signing only runs inside the PixInsight
+# core application (the Security PJSR object) - it cannot run on a
+# GitHub-hosted Ubuntu runner. See the PixInsight Script Code Signing doc:
+# https://pixinsight.com/doc/docs/ScriptCodeSigning/ScriptCodeSigning.html
+#
+# The runner must:
+#   - be registered with the labels in `runs-on` below;
+#   - have PixInsight at PI_BIN (override via repo/runner env if not default);
+#   - have your .xssk keys file at EGO_SIGNING_KEYS (default $HOME/Astro/...);
+#   - have a 0600 password file at EGO_SIGNING_PW_FILE that you keep ON the
+#     runner, so the keys password never leaves your machine / never enters
+#     GitHub. (Alternatively store it as the secret EGO_SIGNING_PASSWORD and
+#     swap the env line below - less private, since GitHub then holds it.)
+#
+# SECURITY: a self-hosted runner executes arbitrary workflow code. Keep this
+# repo's PRs from forks from triggering it - this workflow only runs on push
+# to the listed branches and on manual dispatch, never on pull_request.
+
+on:
+   push:
+      branches: [main, sandbox]
+      paths:
+         - 'source/**'
+         - 'tools/codesign.sh'
+         - 'tools/codesign.js'
+         - 'tools/sign-xri.sh'
+         - 'tools/sign-xri.js'
+         - 'tools/build-package.sh'
+         - 'tools/update_xri.py'
+         - '.github/workflows/release.yml'
+   workflow_dispatch: {}
+
+permissions:
+   contents: write
+
+concurrency:
+   # Serialize releases per branch. Do NOT cancel in progress - a cancelled
+   # run could kill PixInsight mid-signature.
+   group: release-${{ github.ref }}
+   cancel-in-progress: false
+
+jobs:
+   release:
+      # Register your Mac runner with (at least) these labels.
+      runs-on: [self-hosted, macOS]
+
+      env:
+         # Override these via repo Variables (Settings > Secrets and
+         # variables > Actions > Variables) only if your runner differs from
+         # the script defaults. Empty = use the script's built-in default.
+         EGO_SIGNING_KEYS: ${{ vars.EGO_SIGNING_KEYS }}
+         PI_BIN: ${{ vars.PI_BIN }}
+
+      steps:
+         - name: Checkout
+           uses: actions/checkout@v4
+           with:
+              fetch-depth: 0
+              persist-credentials: true
+
+         - name: Resolve keys-password file
+           # The keys password is read from a file kept ON the runner, so it
+           # never enters GitHub. Point repo Variable EGO_SIGNING_PW_FILE at
+           # your own 0600 file, or rely on the default path below. (To use a
+           # GitHub secret instead, drop this step and set a job-level env
+           #   EGO_SIGNING_PASSWORD: ${{ secrets.EGO_SIGNING_PASSWORD }}
+           # - less private, since GitHub then holds the password.)
+           env:
+              EGO_SIGNING_PW_FILE: ${{ vars.EGO_SIGNING_PW_FILE }}
+           run: |
+              PWF="${EGO_SIGNING_PW_FILE:-$HOME/.config/ego/signing.pw}"
+              if [[ ! -f "$PWF" ]]; then
+                 echo "::error::keys-password file not found on runner: $PWF" >&2
+                 exit 1
+              fi
+              echo "EGO_SIGNING_PW_FILE=$PWF" >> "$GITHUB_ENV"
+
+         - name: Sign scripts (.js -> .xsgn)
+           run: |
+              chmod +x tools/codesign.sh tools/sign-xri.sh tools/build-package.sh
+              tools/codesign.sh
+
+         - name: Build package + rewrite updates.xri
+           id: build
+           run: |
+              tools/build-package.sh
+              PKG=$(ls packages/ego-scripts-*.tar.gz | head -n1)
+              echo "pkg=$PKG" >> "$GITHUB_OUTPUT"
+
+         - name: Sign updates.xri
+           run: tools/sign-xri.sh updates.xri
+
+         - name: Commit artifacts
+           env:
+              PKG: ${{ steps.build.outputs.pkg }}
+           run: |
+              git config user.name  "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              git add source/src/scripts/EGo/*.xsgn packages/ updates.xri
+              if git diff --staged --quiet; then
+                 echo "no changes to commit"
+                 exit 0
+              fi
+              # [skip ci] prevents this push from re-triggering the workflow.
+              git commit -m "build: signed ${PKG} [skip ci]"
+              git push origin HEAD:${GITHUB_REF#refs/heads/}
