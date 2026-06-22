@@ -18,9 +18,9 @@
       </p>
    </description>
    <platform os="all" arch="noarch" version="1.9.4:1.9.9999">
-      <package fileName="packages/ego-scripts-20260529.tar.gz" sha1="2e1fc916d481eea37d3f08b307ab67cd155a6921" type="script" releaseDate="20260529">
+      <package fileName="packages/ego-scripts-20260622.tar.gz" sha1="24779b9b077bed3d9fad463750400285b8be448f" type="script" releaseDate="20260622">
          <title>
-            EGo PJSR Scripts - 2026-05-29
+            EGo PJSR Scripts - 2026-06-22
          </title>
          <description>
             <p>
@@ -42,9 +42,9 @@
             </p>
          </description>
       </package>
-      <package fileName="packages/ego-doc-20260529.tar.gz" sha1="bb7e52ecf380f54f8e56964b51ecc3e19ab33581" type="doc" releaseDate="20260529">
+      <package fileName="packages/ego-doc-20260622.tar.gz" sha1="5d3e8f0af241478d256a068b16f703772a82f403" type="doc" releaseDate="20260622">
          <title>
-            EGo PJSR Documentation - 2026-05-29
+            EGo PJSR Documentation - 2026-06-22
          </title>
          <description>
             <p>
@@ -57,4 +57,4 @@
       </package>
    </platform>
 </xri>
-<Signature developerId="Evan Gomolin" timestamp="2026-05-29T14:21:43.675Z" encoding="Base64">JXOZTRdi4MFSjovWrcc9VQtldiT+E/1EG7VNg1K849oQPjwMKzo1ExbYn1ECsj4ncchsJxStbU2gA+TGTohPCw==</Signature>
+<Signature developerId="Evan Gomolin" timestamp="2026-06-22T14:26:39.509Z" encoding="Base64">h01YD81wZ2NwG0V6rPE500c6N11lxWQC5SbDoYXSxKMoCd4tCE9+iXKHjvXgLAI4Yv+C2oa6K6rU/un4w6VJBg==</Signature>
